@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .receipt {
+            border: 1px solid #ddd;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h2 {
+            color: #007BFF;
+        }
+        .info {
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #868e96;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <h2>Payment Receipt</h2>
+        <p>Transaction ID: <strong>{{ transaction_id }}</strong></p>
+        <p>Date: <strong>{{ transaction_date }}</strong></p>
+        <p>Customer: <strong>{{ customer_name }}</strong></p>
+        <p>Amount: <strong>{{ amount }}</strong> INR</p>
+
+        <div class="info">
+            <p>Thank you for your payment. If you have any questions, please contact our support team.</p>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2023 Your Company Name. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

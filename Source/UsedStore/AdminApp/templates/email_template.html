@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Define your email styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .message {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="message">
+        <h1>Hello {{userauth.fullname}}</h1>
+        <h3>This is the mail From Z-Store</h3>
+        {% if message %}
+        <h5>Your Account has been Suspended by Admin</h5>
+        <h5>Due to <del>this and this activity by you</del></h5>
+        <h2 style="color: red; font-weight: 900;">You can contact Z-Store for More Information</h2>
+        {% else %}
+        <h5>Your Account has been released by Admin</h5>
+        <h5>You Can Now Use the Site</h5>
+        <h2 style="color: rgb(144, 255, 144); font-weight: 900;">Enjoy your Shopping</h2>
+        {% endif %}
+    </div>
+</body>
+</html>

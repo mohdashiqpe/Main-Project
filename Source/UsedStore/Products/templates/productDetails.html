@@ -1,0 +1,516 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Z-Store</title>
+        <!-- plugins:css -->
+        <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+        <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+        <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+        <!-- endinject -->
+        <!-- Plugin css for this page -->
+        <link rel="stylesheet" href="{% static 'vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+        <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'js/select.dataTables.min.css' %}">
+        <link rel="stylesheet" href="{' static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+        <link rel="stylesheet" href="{' static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+        <!-- End plugin css for this page -->
+        <!-- inject:css -->
+        <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+        <!-- endinject -->
+        <link rel="shortcut icon" href="{% static 'images/Custom Logo/i2.png' %}" />
+        <!-- Custom Styling -->
+        <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.5.55/css/materialdesignicons.min.css">
+
+        <style>
+            /*****************globals*************/
+            body {
+                font-family: 'open sans';
+                overflow-x: hidden;
+            }
+
+            img {
+                max-width: 100%;
+            }
+
+            .preview {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+
+            @media screen and (max-width: 996px) {
+                .preview {
+                    margin-bottom: 20px;
+                }
+            }
+
+            .tab-pane img.fit-inside {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .preview-pic {
+                -webkit-box-flex: 1;
+                -webkit-flex-grow: 1;
+                -ms-flex-positive: 1;
+                flex-grow: 1;
+            }
+
+            .preview-thumbnail.nav-tabs {
+                border: none;
+                margin-top: 15px;
+            }
+
+            .preview-thumbnail.nav-tabs li {
+                width: 18%;
+                margin-right: 2.5%;
+            }
+
+            .preview-thumbnail.nav-tabs li img {
+                max-width: 100%;
+                display: block;
+            }
+
+            .preview-thumbnail.nav-tabs li a {
+                padding: 0;
+                margin: 0;
+            }
+
+            .preview-thumbnail.nav-tabs li:last-of-type {
+                margin-right: 0;
+            }
+
+            .tab-content {
+                overflow: hidden;
+            }
+
+            .tab-content img {
+                width: 100%;
+                -webkit-animation-name: opacity;
+                animation-name: opacity;
+                -webkit-animation-duration: .3s;
+                animation-duration: .3s;
+            }
+
+            .card {
+                margin-top: 50px;
+                background: #eee;
+                padding: 3em;
+                line-height: 1.5em;
+            }
+
+            @media screen and (min-width: 997px) {
+                .wrapper {
+                    display: -webkit-box;
+                    display: -webkit-flex;
+                    display: -ms-flexbox;
+                    display: flex;
+                }
+            }
+
+            .details {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+
+            .colors {
+                -webkit-box-flex: 1;
+                -webkit-flex-grow: 1;
+                -ms-flex-positive: 1;
+                flex-grow: 1;
+            }
+
+            .product-title,
+            .price,
+            .sizes,
+            .colors {
+                text-transform: UPPERCASE;
+                font-weight: bold;
+            }
+
+            .checked,
+            .price span {
+                color: #ff9f1a;
+            }
+
+            .product-title,
+            .rating,
+            .product-description,
+            .price,
+            .vote,
+            .sizes {
+                margin-bottom: 15px;
+            }
+
+            .product-title {
+                margin-top: 0;
+            }
+
+            .size {
+                margin-right: 10px;
+            }
+
+            .size:first-of-type {
+                margin-left: 40px;
+            }
+
+            .color {
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 10px;
+                height: 2em;
+                width: 2em;
+                border-radius: 2px;
+            }
+
+            .color:first-of-type {
+                margin-left: 20px;
+            }
+
+            .add-to-cart,
+            .like {
+                background: #ff9f1a;
+                padding: 1.2em 1.5em;
+                border: none;
+                text-transform: UPPERCASE;
+                font-weight: bold;
+                color: #fff;
+                -webkit-transition: background .3s ease;
+                transition: background .3s ease;
+            }
+
+            .add-to-cart:hover,
+            .like:hover {
+                background: #b36800;
+                color: #fff;
+            }
+
+            .not-available {
+                text-align: center;
+                line-height: 2em;
+            }
+
+            .not-available:before {
+                font-family: fontawesome;
+                content: "\f00d";
+                color: #fff;
+            }
+
+            .orange {
+                background: #ff9f1a;
+            }
+
+            .green {
+                background: #85ad00;
+            }
+
+            .blue {
+                background: #0076ad;
+            }
+
+            .tooltip-inner {
+                padding: 1.3em;
+            }
+
+            @-webkit-keyframes opacity {
+                0% {
+                    opacity: 0;
+                    -webkit-transform: scale(3);
+                    transform: scale(3);
+                }
+
+                100% {
+                    opacity: 1;
+                    -webkit-transform: scale(1);
+                    transform: scale(1);
+                }
+            }
+
+            @keyframes opacity {
+                0% {
+                    opacity: 0;
+                    -webkit-transform: scale(3);
+                    transform: scale(3);
+                }
+
+                100% {
+                    opacity: 1;
+                    -webkit-transform: scale(1);
+                    transform: scale(1);
+                }
+            }
+
+            /*# sourceMappingURL=style.css.map */
+        </style>
+        <!-- End of Custom Styling -->
+    </head>
+
+    <body>
+        <div class="container-scroller">
+            <!-- partial:partials/_navbar.html -->
+            <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+                <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                    <a class="navbar-brand brand-logo mr-5" href="{% url 'index' %}"><img
+                            src="{% static 'images/Custom Logo/p2.png' %}" class="mr-2" alt="logo" /></a>
+                    <a class="navbar-brand brand-logo-mini" href="{% url 'index' %}"><img
+                            src="{% static 'images/logo-mini.svg' %}" alt="logo" /></a>
+                </div>
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                    <!-- <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="icon-menu"></span>
+        </button> -->
+                    <ul class="navbar-nav mr-lg-2">
+                        <li class="nav-item nav-search d-none d-lg-block">
+                            <div class="input-group">
+                                <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
+                                    <span class="input-group-text" id="search">
+                                        <i class="icon-search"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" id="navbar-search-input"
+                                    placeholder="Search now" aria-label="search" aria-describedby="search">
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav navbar-nav-right">
+                        <!-- <li class="nav-item dropdown">
+            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+              <i class="icon-bell mx-0"></i>
+              <span class="count"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+              <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+              <a class="dropdown-item preview-item">
+                <div class="preview-thumbnail">
+                  <div class="preview-icon bg-success">
+                    <i class="ti-info-alt mx-0"></i>
+                  </div>
+                </div>
+                <div class="preview-item-content">
+                  <h6 class="preview-subject font-weight-normal">Application Error</h6>
+                  <p class="font-weight-light small-text mb-0 text-muted">
+                    Just now
+                  </p>
+                </div>
+              </a>
+              <a class="dropdown-item preview-item">
+                <div class="preview-thumbnail">
+                  <div class="preview-icon bg-warning">
+                    <i class="ti-settings mx-0"></i>
+                  </div>
+                </div>
+                <div class="preview-item-content">
+                  <h6 class="preview-subject font-weight-normal">Settings</h6>
+                  <p class="font-weight-light small-text mb-0 text-muted">
+                    Private message
+                  </p>
+                </div>
+              </a>
+              <a class="dropdown-item preview-item">
+                <div class="preview-thumbnail">
+                  <div class="preview-icon bg-info">
+                    <i class="ti-user mx-0"></i>
+                  </div>
+                </div>
+                <div class="preview-item-content">
+                  <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                  <p class="font-weight-light small-text mb-0 text-muted">
+                    2 days ago
+                  </p>
+                </div>
+              </a>
+            </div>
+          </li> -->
+                        {% if not user.username %}
+                        <li class="nav-item nav-profile dropdown">
+                            <a href="{% url 'signup' %}" class="btn btn-primary">SIGN UP</a>
+                            <a href="{% url 'signin' %}" class="btn btn-primary" style="margin-left: 10px;">SIGN IN</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item nav-profile dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                                <a href="{% url 'addProducts' %}" class="btn btn-inverse-success p-2">Sell Product</a>
+                            </a>
+                        </li>
+                        {% if userauth.userRole == 1 %}
+                        <li class="nav-item nav-profile dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                                <a href="{% url 'adminPy' %}" class="nav-link">
+                                    <i class="mdi mdi-airplane text-primary"></i>
+                                    Admin Dashboard
+                                </a>
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item nav-profile dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                                <h4 style="display: inline-block; font-weight: 900; justify-content: center;"
+                                    class="mr-2">{{userdata.fullname}}</h4>
+                                {% if userdata.profileImage %}
+                                <img src="{{userdata.profileImage.url}}" alt="profile" />
+                                {% else %}
+                                <img src="{% static 'images/faces/avatar.jpeg' %}" alt="profile" />
+                                {% endif %}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                                aria-labelledby="profileDropdown">
+                                <a class="dropdown-item" href="{% url 'settings' %}">
+                                    <i class="ti-settings text-primary"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="{% url 'userLogout' %}">
+                                    <i class="ti-power-off text-primary"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                        {% endif %}
+                        <!-- <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <img src="images/faces/face28.jpg" alt="profile"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              <a class="dropdown-item">
+                <i class="ti-settings text-primary"></i>
+                Settings
+              </a>
+              <a class="dropdown-item">
+                <i class="ti-power-off text-primary"></i>
+                Logout
+              </a>
+            </div>
+          </li> -->
+                        <!-- <li class="nav-item nav-settings d-none d-lg-flex">
+            <a class="nav-link" href="#">
+              <i class="icon-ellipsis"></i>
+            </a>
+          </li> -->
+                    </ul>
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                        data-toggle="offcanvas">
+                        <span class="icon-menu"></span>
+                    </button>
+                </div>
+            </nav>
+            <!-- partial -->
+            <div class="container-fluid page-body-wrapper">
+                <!-- partial:partials/_settings-panel.html -->
+                <div id="right-sidebar" class="settings-panel">
+                    <i class="settings-close ti-close"></i>
+                    <ul class="nav nav-tabs border-top" id="setting-panel" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo-section" role="tab"
+                                aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats-section" role="tab"
+                                aria-controls="chats-section">CHATS</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <!-- partial -->
+                <!-- partial:partials/_sidebar.html -->
+                <!-- Side Bar Here -->
+                <!-- partial -->
+                <div class="main-panel" style="width: 100vw;">
+                    <div class="content-wrapper">
+                        {% if data %}
+                        <div class="card">
+                            <div class="container-fliud">
+                                <div class="wrapper row">
+                                    <div class="preview col-md-6">
+
+                                        <div class="preview-pic tab-content">
+                                            {% for i in data.productimages_set.all %}
+                                            <div class="tab-pane{% if forloop.first %} active{% endif %}"
+                                                id="pic-{{ forloop.counter }}">
+                                                <img src="{{ i.images.url }}" style="width: 650px; height: 350px;"/>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <ul class="preview-thumbnail nav nav-tabs">
+                                            {% for i in data.productimages_set.all %}
+                                            <li{% if forloop.first %} class="active" {% endif %}>
+                                                <a data-target="#pic-{{ forloop.counter }}" data-toggle="tab">
+                                                    <img src="{{i.images.url}}" />
+                                                </a>
+                                                </li>
+                                                {% endfor %}
+                                        </ul>
+
+                                    </div>
+                                    <div class="details col-md-6">
+                                        <h3 class="product-title">{{ data.name }}</h3>
+                                        <p class="product-description">{{ data.description }}</p>
+                                        <p class="product-description">{{ data.mainCategory.name }} / {{ data.category.name }}</p>
+                                        <h4 class="price">current price: <span>&#x20B9;{{ data.price|floatformat:"2" }}</span></h4>
+
+                                        <div class="action">
+                                            <a href="{% url 'checkOut' data.id %}" class="btn btn-danger">Buy Now</a>
+                                            <a href="{% url 'cart' %}?id={{data.id}}" class="btn btn-warning">Add to Cart</a>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <!-- content-wrapper ends -->
+                    <!-- partial:partials/_footer.html -->
+                    <!-- partial -->
+                </div>
+                <!-- main-panel ends -->
+            </div>
+            <!-- page-body-wrapper ends -->
+        </div>
+        <!-- container-scroller -->
+
+        <!-- plugins:js -->
+        <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+        <!-- endinject -->
+        <!-- Plugin js for this page -->
+        <script src="{% static 'vendors/chart.js/Chart.min.js' %}"></script>
+        <script src="{% static 'vendors/datatables.net/jquery.dataTables.js' %}"></script>
+        <script src="{% static 'vendors/datatables.net-bs4/dataTables.bootstrap4.js' %}"></script>
+        <script src="{% static 'js/dataTables.select.min.js' %}"></script>
+
+        <!-- End plugin js for this page -->
+        <!-- inject:js -->
+        <script src="{% static 'js/off-canvas.js' %}"></script>
+        <script src="{% static 'js/hoverable-collapse.js' %}"></script>
+        <script src="{% static 'js/template.js' %}"></script>
+        <script src="{% static 'js/settings.js' %}"></script>
+        <script src="{% static 'js/todolist.js' %}"></script>
+        <!-- endinject -->
+        <!-- Custom js for this page-->
+        <script src="{% static 'js/dashboard.js' %}"></script>
+        <script src="{% static 'js/Chart.roundedBarCharts.js' %}"></script>
+        <script src="{% static 'productsJS/filtering.js' %}"></script>
+        <!-- End custom js for this page-->
+        <script>
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        </script>
+    </body>
+
+</html>

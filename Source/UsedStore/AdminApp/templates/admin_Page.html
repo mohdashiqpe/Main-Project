@@ -1,0 +1,546 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Z Store</title>
+        <!-- plugins:css -->
+        <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+        <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+        <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+        <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+        <!-- endinject -->
+        <!-- Plugin css for this page -->
+        <!-- End plugin css for this page -->
+        <!-- inject:css -->
+        <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+        <!-- endinject -->
+        <link rel="shortcut icon" href="{% static 'images/Custom Logo/i2.png' %}" />
+    </head>
+
+    <body class="sidebar-dark">
+        <div class="container-scroller">
+            <!-- partial:partials/_navbar.html -->
+            <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row navbar-dark">
+                <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                    <a class="navbar-brand brand-logo mr-5" href="{% url 'index' %}"><img
+                            src="{% static 'images/Custom Logo/p2.png' %}" class="mr-2" alt="logo" /></a>
+                    <a class="navbar-brand brand-logo-mini" href="{% url 'index' %}"><img
+                            src="{% static 'images/logo-mini.svg' %}" alt="logo" /></a>
+                </div>
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                    <ul class="navbar-nav mr-lg-2">
+                        <li class="nav-item nav-search d-none d-lg-block">
+                            <div class="input-group">
+                                <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
+                                    <span class="input-group-text" id="search">
+                                        <i class="icon-search"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" id="navbar-search-input"
+                                    placeholder="Search now" aria-label="search" aria-describedby="search">
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav navbar-nav-right">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
+                                data-toggle="dropdown">
+                                <i class="icon-bell mx-0"></i>
+                                <span class="count"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                                aria-labelledby="notificationDropdown">
+                                <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <div class="preview-icon bg-success">
+                                            <i class="ti-info-alt mx-0"></i>
+                                        </div>
+                                    </div>
+                                    <div class="preview-item-content">
+                                        <h6 class="preview-subject font-weight-normal">Application Error</h6>
+                                        <p class="font-weight-light small-text mb-0 text-muted">
+                                            Just now
+                                        </p>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <div class="preview-icon bg-warning">
+                                            <i class="ti-settings mx-0"></i>
+                                        </div>
+                                    </div>
+                                    <div class="preview-item-content">
+                                        <h6 class="preview-subject font-weight-normal">Settings</h6>
+                                        <p class="font-weight-light small-text mb-0 text-muted">
+                                            Private message
+                                        </p>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <div class="preview-icon bg-info">
+                                            <i class="ti-user mx-0"></i>
+                                        </div>
+                                    </div>
+                                    <div class="preview-item-content">
+                                        <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                                        <p class="font-weight-light small-text mb-0 text-muted">
+                                            2 days ago
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item nav-profile dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                                <h4 style="display: inline-block; font-weight: 900; justify-content: center;" class="mr-2">{{context.userData.fullname}}</h4>
+                                {% if context.userData.profileImage %}
+                                <img src="{{ context.userData.profileImage.url }}" alt="profile" />
+                                {% else %}
+                                <img src="{% static 'images/faces/avatar.jpeg' %}" alt="profile" />
+                                {% endif %}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                                aria-labelledby="profileDropdown">
+                                <a class="dropdown-item" href="{% url 'settings' %}">
+                                    <i class="ti-settings text-primary"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="{% url 'userLogout' %}">
+                                    <i class="ti-power-off text-primary"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                        data-toggle="offcanvas">
+                        <span class="icon-menu"></span>
+                    </button>
+                </div>
+            </nav>
+            <!-- partial -->
+            <div class="container-fluid page-body-wrapper">
+                <!-- partial:partials/_settings-panel.html -->
+                <div class="theme-setting-wrapper">
+                    <div id="settings-trigger"><i class="ti-settings"></i></div>
+                    <div id="theme-settings" class="settings-panel">
+                        <i class="settings-close ti-close"></i>
+                        <p class="settings-heading">SIDEBAR SKINS</p>
+                        <div class="sidebar-bg-options selected" id="sidebar-light-theme">
+                            <div class="img-ss rounded-circle bg-light border mr-3"></div>Light
+                        </div>
+                        <div class="sidebar-bg-options" id="sidebar-dark-theme">
+                            <div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark
+                        </div>
+                        <p class="settings-heading mt-2">HEADER SKINS</p>
+                        <div class="color-tiles mx-0 px-4">
+                            <div class="tiles success"></div>
+                            <div class="tiles warning"></div>
+                            <div class="tiles danger"></div>
+                            <div class="tiles info"></div>
+                            <div class="tiles dark"></div>
+                            <div class="tiles default"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="right-sidebar" class="settings-panel">
+                    <i class="settings-close ti-close"></i>
+                    <ul class="nav nav-tabs border-top" id="setting-panel" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo-section" role="tab"
+                                aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats-section" role="tab"
+                                aria-controls="chats-section">CHATS</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="setting-content">
+                        <!-- To do section tab ends -->
+                        <!-- chat tab ends -->
+                    </div>
+                </div>
+                <!-- partial -->
+                <!-- partial:partials/_sidebar.html -->
+                <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                    <ul class="nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">
+                                <i class="icon-grid menu-icon"></i>
+                                <span class="menu-title">Admin Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                                aria-controls="ui-basic">
+                                <i class="icon-head menu-icon"></i>
+                                <span class="menu-title">Authority</span>
+                                <i class="menu-arrow"></i>
+                            </a>
+                            <div class="collapse" id="ui-basic">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item"> <a class="nav-link" href="{% url 'addTester' %}">Add Tester</a></li>
+                                    <li class="nav-item"> <a class="nav-link" href="#">Add Admin</a></li>
+                                    <li class="nav-item"> <a class="nav-link" href="#">Manage T & A</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false"
+                                aria-controls="form-elements">
+                                <i class="mdi mdi-cart-outline menu-icon"></i>
+                                <span class="menu-title">Products</span>
+                                <i class="menu-arrow"></i>
+                            </a>
+                            <div class="collapse" id="form-elements">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'addCategory' %}">Add Category</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#"><del>Review Products</del></a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" href="#"><del>Manage</del></a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false"
+                                aria-controls="charts">
+                                <i class="icon-bar-graph menu-icon"></i>
+                                <span class="menu-title">Statistics</span>
+                                <i class="menu-arrow"></i>
+                            </a>
+                            <div class="collapse" id="charts">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item"> <a class="nav-link" href="#"><del>Sales Data</del></a></li>
+                                    <li class="nav-item"> <a class="nav-link" href="#"><del>Commission Data</del></a>
+                                    </li>
+                                    <li class="nav-item"> <a class="nav-link" href="#"><del>User Activity</del></a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% static 'pages/documentation/documentation.html '%}">
+                                <i class="icon-paper menu-icon"></i>
+                                <span class="menu-title"><del>Documentation</del></span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- partial -->
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        <div class="row">
+                            <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                                <h3 class="font-weight-bold">Welcome {{ context.userData.fullname }}</h3>
+                                <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span
+                                        class="text-primary">3 unread alerts!</span></h6><br>
+                            </div>
+                            <div class="col-lg-12 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Registered Users</h4>
+                                        <p class="card-description">
+                                            Registered User's both <code>active and inactive</code> users
+                                        </p>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>User</th>
+                                                        <th>Full name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone No:</th>
+                                                        <th>Address Location</th>
+                                                        <th>User Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% if combined_data %}
+                                                    {% for userA, userD, userL in combined_data %}
+                                                    {% if userA.userRole == 2 %}
+                                                    {% if not userA.is_active %}
+                                                    <tr style="background-color: black; color: aliceblue;">
+                                                        {% else %}
+                                                    <tr>
+                                                        {% endif %}
+                                                        {% if userD.profileImage %}
+                                                        <td><img src="{{userD.profileImage.url}}" alt=""></td>
+                                                        {% else %}
+                                                        <td><img src="{% static 'images/faces/avatar.jpeg' %}" alt="">
+                                                        </td>
+                                                        {% endif %}
+                                                        <td>{{ userD.fullname }}</td>
+                                                        <td>{{ userA.email }}</td>
+                                                        {% if userD.phoneNumber %}
+                                                        <td>{{ userD.phoneNumber }}</td>
+                                                        {% else %}
+                                                        <td style="color: red;">Contact Number Unavailable</td>
+                                                        {% endif %}
+                                                        {% if userL.country %}
+                                                        <td>
+                                                            {{ userL.country}}, {{userL.state}},{{ userL.city }}
+                                                        </td>
+                                                        {% else %}
+                                                        <td style="color: red;">Location Unavailable</td>
+                                                        {% endif %}
+                                                        <td class="pr-1" style="font-weight: 900;">
+                                                            {% if userA.is_active %}
+                                                            <span style="color: azure;"
+                                                                class="badge bg-success">Active</span>
+                                                            {% else %}
+                                                            <span style="color: red;"
+                                                                class="badge bg-dark">Suspended</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            {% if userA.is_active %}
+                                                            <a href="{% url 'suspendView' %}?email={{userA.email}}" id="disableUser"
+                                                                class="btn btn-inverse-warning btn-sm mb-2 ml-2">Suspend</a><br>
+                                                            {% else %}
+                                                            <a href="{% url 'suspendView' %}?email={{userA.email}}"
+                                                                class="btn btn-inverse-warning btn-sm mb-2 ml-2">Un-Suspend</a><br>
+                                                            {% endif %}
+                                                            <button
+                                                                class="btn btn-inverse-info btn-sm ml-2 accordion-button"
+                                                                onclick="toggleAccordion(this)">Full Info</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="accordion-content" style="display: none;">
+                                                        <td colspan="7">
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        {% if userD.profileImage %}
+                                                                        <img class="rounded float-start" src="{{userD.profileImage.url}}" style="width: 100%; height: 100%;" alt="">
+                                                                        {% else %}
+                                                                        <img class="rounded float-start" src="{% static 'images/faces/avatar.jpeg' %}" style="width: 100%; height: 100%;" alt="">
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <p style="display: inline-block;"><strong>Full Name:</strong> {{userD.fullname}}</p><br>
+                                                                        <p style="display: inline-block;"><strong>User Name:</strong> {{userA.username}}</p><br>
+                                                                        <p style="display: inline-block;"><strong>Email:</strong> {{userA.email}}</p><br>
+                                                                        {% if userD.phoneNumber %}
+                                                                        <p style="display: inline-block;"><strong>Contact Number:</strong> {{userD.phoneNumber}}</p><br>
+                                                                        {% else %}
+                                                                        <p style="display: inline-block;"><strong>Contact Number:</strong> <span style="color: red;">Unavailable</span></p><br>
+                                                                        {% endif %}
+                                                                        <p style="display: inline-block;"><strong>Signed In On:</strong> {{userA.date_joined}}</p><br>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {% if userL.country %}
+                                                                        <p style="display: inline-block;"><strong>Country:</strong> {{userL.country}}</p><br>
+                                                                        <p style="display: inline-block;"><strong>State:</strong> {{userL.state}}</p><br>
+                                                                        <p style="display: inline-block;"><strong>City:</strong> {{userL.city}}</p><br>
+                                                                        {% else %}
+                                                                        <p style="display: inline-block;"><strong>Country:</strong> <span style="color: red;">Unavailable</span></p><br>
+                                                                        <p style="display: inline-block;"><strong>State:</strong> <span style="color: red;">Unavailable</span></p><br>
+                                                                        <p style="display: inline-block;"><strong>City:</strong> <span style="color: red;">Unavailable</span></p><br>
+                                                                        {% endif %}
+                                                                        <p style="display: inline-block;"><strong>Last Login:</strong> {{userA.last_login}}</p><br>
+                                                                        <p style="display: inline-block;"><strong>User Status:</strong> 
+                                                                            {% if userA.is_active %}
+                                                                            <span style="color: azure;"
+                                                                                class="badge bg-success">Active</span>
+                                                                            {% else %}
+                                                                            <span style="color: red;"
+                                                                                class="badge bg-dark">Suspended</span>
+                                                                            {% endif %}</p><br>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <button class="btn btn-primary mt-5">User Activity</button><br>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Quality Testers</h4>
+                                        <p class="card-description">
+                                            Something About Quality Tester
+                                        </p>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>User</th>
+                                                        <th>Name</th>
+                                                        <th>Category</th>
+                                                        <th>Phone no</th>
+                                                        <th>Work Location</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% if combined_data %}
+                                                    {% for userA, userD, userL in combined_data %}
+                                                    {% if userA.userRole == 3 %}
+                                                    {% if not userA.is_active %}
+                                                    <tr style="background-color: black; color: aliceblue;">
+                                                        {% else %}
+                                                    <tr>
+                                                        {% endif %}
+                                                        {% if userD.profileImage %}
+                                                        <td><img src="{{userD.profileImage.url}}" alt=""></td>
+                                                        {% else %}
+                                                        <td><img src="{% static 'images/faces/avatar.jpeg' %}" alt="">
+                                                        </td>
+                                                        {% endif %}
+                                                        <td>{{ userA.username }}</td>
+                                                        <td>{{userA.tester_set.all.first.fullname}}</td>
+                                                        {% if userD.phoneNumber %}
+                                                        <td>{{ userD.phoneNumber }}</td>
+                                                        {% else %}
+                                                        <td style="color: red;">Contact Number Unavailable</td>
+                                                        {% endif %}
+                                                        {% if userL.country %}
+                                                        <td>
+                                                            {{ userL.country}}, {{userL.state}},{{ userL.city }}
+                                                        </td>
+                                                        {% else %}
+                                                        <td style="color: red;">Location Unavailable</td>
+                                                        {% endif %}
+                                                        <td class="pr-1" style="font-weight: 900;">
+                                                            {% if userA.is_active %}
+                                                            <span style="color: azure;"
+                                                                class="badge bg-success">Active</span>
+                                                            {% else %}
+                                                            <span style="color: red;"
+                                                                class="badge bg-dark">Suspended</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            {% if userA.is_active %}
+                                                            <a href="{% url 'suspendView' %}?email={{userA.email}}" class="btn btn-inverse-warning btn-sm mb-2 ml-2">Suspend</a>
+                                                            <button class="btn btn-inverse-danger btn-sm mb-2 ml-2">Send<br>Termination Letter</button><br>    
+                                                            <br>
+                                                            {% else %}
+                                                            <a href="{% url 'suspendView' %}?email={{userA.email}}" class="btn btn-inverse-warning btn-sm mb-2 ml-2">Un-Suspend</a>
+                                                            <button class="btn btn-inverse-danger btn-sm mb-2 ml-2">Send<br>Termination Letter</button><br>
+                                                            {% endif %}
+                                                            <button class="btn btn-inverse-info btn-sm ml-2 accordion-button" onclick="toggleAccordion(this)">Full Info</button>
+                                                            <button class="btn btn-inverse-success btn-sm ml-3">Portfolio</button>
+                                                            <!-- <td>
+                                                                <button
+                                                                    class="btn btn-inverse-warning btn-sm mb-2 ml-2">Suspend</button>
+                                                                
+                                                                <button class="btn btn-inverse-info btn-sm ml-2">Full
+                                                                    Info</button>
+                                                                
+                                                            </td> -->
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="accordion-content" style="display: none;">
+                                                        <td colspan="7">
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        {% if userD.profileImage %}
+                                                                        <img class="rounded float-start" src="{{userD.profileImage.url}}" style="width: 100%; height: 100%;" alt="">
+                                                                        {% else %}
+                                                                        <img class="rounded float-start" src="{% static 'images/faces/avatar.jpeg' %}" style="width: 100%; height: 100%;" alt="">
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <p style="display: inline-block;"><strong>Tester Name:</strong> {{userA.username}}</p><br>
+                                                                        <p style="display: inline-block;"><strong>Email:</strong> {{userA.email}}</p><br>
+                                                                        {% if userD.phoneNumber %}
+                                                                        <p style="display: inline-block;"><strong>Contact Number:</strong> {{userD.phoneNumber}}</p><br>
+                                                                        {% else %}
+                                                                        <p style="display: inline-block;"><strong>Contact Number:</strong> <span style="color: red;">Unavailable</span></p><br>
+                                                                        {% endif %}
+                                                                        <p style="display: inline-block;"><strong>Signed In On:</strong> {{userA.date_joined}}</p><br>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {% if userL.country %}
+                                                                        <p style="display: inline-block;"><strong>Country:</strong> {{userL.country}}</p><br>
+                                                                        <p style="display: inline-block;"><strong>State:</strong> {{userL.state}}</p><br>
+                                                                        <p style="display: inline-block;"><strong>City:</strong> {{userL.city}}</p><br>
+                                                                        {% else %}
+                                                                        <p style="display: inline-block;"><strong>Country:</strong> <span style="color: red;">Unavailable</span></p><br>
+                                                                        <p style="display: inline-block;"><strong>State:</strong> <span style="color: red;">Unavailable</span></p><br>
+                                                                        <p style="display: inline-block;"><strong>City:</strong> <span style="color: red;">Unavailable</span></p><br>
+                                                                        {% endif %}
+                                                                        <p style="display: inline-block;"><strong>Last Login:</strong> {{userA.last_login}}</p><br>
+                                                                        <p style="display: inline-block;"><strong>User Status:</strong> 
+                                                                            {% if userA.is_active %}
+                                                                            <span style="color: azure;"
+                                                                                class="badge bg-success">Active</span>
+                                                                            {% else %}
+                                                                            <span style="color: red;"
+                                                                                class="badge bg-dark">Suspended</span>
+                                                                            {% endif %}</p><br>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <button class="btn btn-primary mt-5">User Activity</button><br>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- content-wrapper ends -->
+                    <!-- partial:partials/_footer.html -->
+                    <!-- partial -->
+                </div>
+                <!-- main-panel ends -->
+            </div>
+            <!-- page-body-wrapper ends -->
+        </div>
+        <!-- container-scroller -->
+        <!-- plugins:js -->
+        <script>
+            function toggleAccordion(button) {
+                var content = button.parentElement.parentElement.nextElementSibling;
+                if (content.style.display === 'none' || content.style.display === '') {
+                    content.style.display = 'table-row';
+                    button.textContent = "Less Info"
+                } else {
+                    content.style.display = 'none';
+                    button.textContent = "Full Info"
+                }
+            }
+        </script>
+        <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+        <!-- endinject -->
+        <!-- Plugin js for this page -->
+        <!-- End plugin js for this page -->
+        <!-- inject:js -->
+        <script src="{% static 'js/off-canvas.js' %}"></script>
+        <script src="{% static 'js/hoverable-collapse.js' %}"></script>
+        <script src="{% static 'js/template.js' %}"></script>
+        <script src="{% static 'js/settings.js' %}"></script>
+        <script src="{% static 'js/todolist.js' %}"></script>
+        <!-- endinject -->
+        <!-- Custom js for this page-->
+        <!-- End custom js for this page-->
+    </body>
+
+</html>
