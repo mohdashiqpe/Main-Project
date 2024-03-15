@@ -1,0 +1,108 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-12 grid-margin strech-card">
+            <h2 class="font-weight-bold">My Orders</h2>
+            {% for p in products %}
+            <div class="card shadow-0 border rounded-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                            <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                <img src="{{p.productimages_set.first.images.url}}" class="w-100">
+                                <a href="#!">
+                                    <div class="hover-overlay">
+                                        <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);">
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-xl-6">
+                            <h5>{{p.name}}</h5>
+                            <div class="d-flex flex-row">
+                                <div class="text-danger mb-1 me-2">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="mt-1 mb-0 text-muted small">
+                                <span class="text-primary"> • </span>
+                                <span>Laptops</span>
+                                <span class="text-primary"> • </span>
+                                <span>Apple </span>
+                            </div>
+                            <p class="text-truncate mb-4 mb-md-0">
+                                {{p.description}}
+                            </p>
+                            <p class="text-truncate mb-4 mb-md-0">
+                                <strong>
+
+                                </strong>
+                            </p>
+                            <li><strong>Mannual Bidding</strong></li><strong>
+
+                            </strong>
+                            <p></p>
+                            <button class="btn btn-inverse-info">Sell for Highest Bid</button>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                            <div class="d-flex flex-row align-items-center mb-1">
+                                <h4 class="mb-1 me-1" id="productprice"></h4>
+                            </div>
+                            <h6 class="text-danger">Current Base Price</h6>
+                            <div class="d-flex flex-column mt-4">
+                                <!-- The below Button can be used for accordion -->
+                                <!-- <button class="btn btn-primary btn-sm" type="button"
+                                    id="expanddetail">Details</button> -->
+
+                                <h5>Sold for {{p.biddingprice}}</h5>
+                                <p style="font-weight: bolder;">Sold to {{p.sold_to.first_name}} {{p.sold_to.last_name}}</p>
+
+                            </div>
+                            <button class="btn btn-danger">Click Me</button>
+                        </div>
+                    </div>
+                    <!-- The below can be used in some time -->
+                    <!-- <div class="list-group pt-4">
+                        <a class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">List group item heading</h5>
+                                <small>3 days ago</small>
+                            </div>
+                            <p class="mb-1">Some placeholder content in a paragraph.</p>
+                            <small>And some small print.</small>
+                        </a>
+                        <div class="list-group-item ">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">List group item heading</h5>
+                                <small class="text-muted">3 days ago</small>
+                            </div>
+                            <p class="mb-1">Some placeholder content in a paragraph.</p>
+                            <small class="text-muted">And some muted small print.</small>
+                        </div>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">List group item heading</h5>
+                                <small class="text-muted">3 days ago</small>
+                            </div>
+                            <p class="mb-1">Some placeholder content in a paragraph.</p>
+                            <small class="text-muted">And some muted small print.</small>
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+<!-- <div class="progress" style="height: 6px; border-radius: 16px;">
+    <div class="progress-bar" role="progressbar"
+        style="width: 65%; border-radius: 16px; background-color: #a8729a;"
+        aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+</div> -->

@@ -1,0 +1,326 @@
+{% block sidebar %}
+{% if not userincheckout and not productdetials and not usercart and not atSuccessPage %}
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav mb-1">
+        {% if request.user.UserRole == 1 %}
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav ml-0 mt-0">
+                <li class="nav-item {% if inadminview %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'home' %}">
+                        <i class="icon-grid menu-icon"></i>
+                        <span class="menu-title">Admin Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if ataddtesterview %}active{% endif %}">
+                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                        aria-controls="ui-basic">
+                        <i class="icon-head menu-icon"></i>
+                        <span class="menu-title">Authority</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="ui-basic">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link" href="{% url 'addtester' %}">Add Tester</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="#">Add Admin</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="#">Manage T & A</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false"
+                        aria-controls="form-elements">
+                        <i class="mdi mdi-cart-outline menu-icon"></i>
+                        <span class="menu-title">Products</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="form-elements">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item {% if inaddcategory %}active{% endif %}"><a class="nav-link" href="{% url 'addCategory' %}">Add Category</a>
+                            </li>
+                            <!-- <li class="nav-item"><a class="nav-link" href=""><del>Review Products</del></a>
+                            </li> -->
+                            <li class="nav-item"><a class="nav-link" href="{% url 'manageproduct' %}">Manage Product</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false"
+                        aria-controls="charts">
+                        <i class="icon-bar-graph menu-icon"></i>
+                        <span class="menu-title">Statistics</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="charts">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link" href="#"><del>Sales Data</del></a></li>
+                            <li class="nav-item"> <a class="nav-link" href="#"><del>Commission Data</del></a>
+                            </li>
+                            <li class="nav-item"> <a class="nav-link" href="#"><del>User Activity</del></a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">
+                        <i class="icon-paper menu-icon"></i>
+                        <span class="menu-title"><del>Documentation</del></span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        {% elif request.user.UserRole == 3 %}
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="">
+                        <i class="icon-grid menu-icon"></i>
+                        <span class="menu-title">Panel View</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        {% else %}
+        <!-- User Page Sidebar -->
+        <!-- <article class="card-group-item p-0">
+            <header class="card-header p-1 d-flex align-items-center justify-content-center">
+                <h6 class="title mt-1">Choose type </h6>
+            </header>
+            <div class="filter-content p-0">
+                <div class="card-body">
+                    <label class="form-check">
+                        <input class="form-check-input" type="radio" name="exampleRadio" value="">
+                        <span class="form-check-label ml-0">
+                            Electronics
+                        </span>
+                    </label>
+                    <label class="form-check">
+                        <input class="form-check-input" type="radio" name="exampleRadio" value="">
+                        <span class="form-check-label ml-0">
+                            Automobile
+                        </span>
+                    </label>
+                    <label class="form-check">
+                        <input class="form-check-input" type="radio" name="exampleRadio" value="">
+                        <span class="form-check-label ml-0">
+                            Some other option
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </article> -->
+        {% if not userinsettings and not userinaddproduct and not myproducts and not bidding and not myorders %}
+        <!-- <article class="card-group-item p-0">
+            <header class="card-header p-1 d-flex align-items-center justify-content-center">
+                <h6 class="title mt-1">Filters</h6>
+            </header>
+            <div class="filter-content p-0">
+                <div class="card-body p-1">
+                    <button class="close" id="closefilter">&times;</button>
+                </div>
+            </div>
+        </article> -->
+        <article class="card-group-item p-0">
+            <header class="card-header p-1 d-flex align-items-center justify-content-center">
+                <h6 class="title mt-1">Category</h6> 
+            </header>
+            <div class="filter-content p-0">
+                <div class="card-body p-1">
+                    <form>
+                        <select name="" id="filtercat" class="form-check form-control" onchange="loadBrands()">
+                            <option value="">All Category</option>
+                        </select>
+                    </form>
+                </div> <!-- card-body.// -->
+            </div>
+        </article>
+        <article class="card-group-item p-0">
+            <header class="card-header p-1 d-flex align-items-center justify-content-center">
+                <h6 class="title mt-1">Brand</h6>
+            </header>
+            <div class="filter-content p-0">
+                <div class="card-body p-1">
+                    <form>
+                        <select name="" id="filterbrand" class="form-check form-control">
+                        </select>
+                    </form>
+                </div> <!-- card-body.// -->
+            </div>
+        </article>
+        <article class="card-group-item">
+            <header class="card-header p-1 d-flex align-items-center justify-content-center">
+                <h6 class="title">Pricing Range</h6>
+            </header>
+            <div class="filter-content">
+                <div class="card-body">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="Check1">
+                        <label class="custom-control-label" for="Check1">0 - 50,000</label>
+                    </div> <!-- form-check.// -->
+
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="Check2">
+                        <label class="custom-control-label" for="Check2">50,001 - 1,50,000</label>
+                    </div> <!-- form-check.// -->
+
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="Check3">
+                        <label class="custom-control-label" for="Check3">1,50,001 - 2,50,000</label>
+                    </div> <!-- form-check.// -->
+
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="Check4">
+                        <label class="custom-control-label" for="Check4">2,50,000 - 5,00,000</label>
+                    </div> <!-- form-check.// -->
+
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="Check5">
+                        <label class="custom-control-label" for="Check5">5,00,001 & Above</label>
+                    </div>
+                </div> <!-- card-body.// -->
+            </div>
+        </article>
+        <article class="card-group-item">
+            <header class="card-header p-1 d-flex align-items-center justify-content-center">
+                <h6 class="title">QA Rating</h6>
+            </header>
+            <div class="filter-content">
+                <div class="card-body">
+                    <div class="custom-control custom-checkbox">
+                        <span class="float-right badge badge-light round">52</span>
+                        <input type="checkbox" class="custom-control-input" id="Check11">
+                        <label class="custom-control-label" for="Check11">
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                        </label>
+                    </div> <!-- form-check.// -->
+
+                    <div class="custom-control custom-checkbox">
+                        <span class="float-right badge badge-light round">132</span>
+                        <input type="checkbox" class="custom-control-input" id="Check12">
+                        <label class="custom-control-label" for="Check12">
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                        </label>
+                    </div> <!-- form-check.// -->
+
+                    <div class="custom-control custom-checkbox">
+                        <span class="float-right badge badge-light round">17</span>
+                        <input type="checkbox" class="custom-control-input" id="Check13">
+                        <label class="custom-control-label" for="Check13">
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                        </label>
+                    </div> <!-- form-check.// -->
+
+                    <div class="custom-control custom-checkbox">
+                        <span class="float-right badge badge-light round">7</span>
+                        <input type="checkbox" class="custom-control-input" id="Check14">
+                        <label class="custom-control-label" for="Check14">
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star-outline"></i>
+                        </label>
+                    </div> <!-- form-check.// -->
+
+                    <div class="custom-control custom-checkbox">
+                        <span class="float-right badge badge-light round">7</span>
+                        <input type="checkbox" class="custom-control-input" id="Check15">
+                        <label class="custom-control-label" for="Check15">
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                            <i class="mdi mdi-star"></i>
+                        </label>
+                    </div>
+                </div> <!-- card-body.// -->
+            </div>
+        </article>
+        {% else %}
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav ml-0 mt-0 ">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">
+                        <i class="mdi mdi-arrow-left-bold menu-icon"></i>
+                        <span class="menu-title">Back to Store</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if userinsettings %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'userSettings' %}">
+                        <i class="mdi mdi-atom menu-icon"></i>
+                        <span class="menu-title">Profile Settings</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if userinaddproduct %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'addproduct' %}">
+                        <i class="icon-grid menu-icon"></i>
+                        <span class="menu-title">List Product</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if myproducts %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'myproducts' %}">
+                        <i class="icon-grid menu-icon"></i>
+                        <span class="menu-title">My Product</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if bidding %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'productbidding' %}">
+                        <i class="icon-grid menu-icon"></i>
+                        <span class="menu-title">Bidding</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">
+                        <i class="icon-grid menu-icon"></i>
+                        <span class="menu-title">Account Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
+        <!-- <form action="" method="post" id="filterForm">
+            {% csrf_token %}
+            <ul class="nav">
+                <li class="nav-item mt-3">
+                    <h4 class="menu-title">Main Category</h4>
+                    <select name="main_category" class="form-control" id="mainCategory" onchange="loadFilterCategory()">
+                        <option value="">All</option>
+                    </select>
+                </li>
+                <li class="nav-item mt-3 d-none" id="catList">
+                    <h4 class="menu-title">Category</h4>
+                    <select name="category" class="form-control" id="category">
+                        <option value="">All</option>
+                    </select>
+                </li>
+                <li class="nav-item mt-3">
+                    <h4 class="menu-title">Price Range</h4>
+                    <select name="price_min" id="" class="form-control">
+                        <option value="">Any</option>
+                        <option value="1">Below 1000 &#8377;</option>
+                        <option value="2">1000 &#8377; - 5000 &#8377;</option>
+                        <option value="3">5000 &#8377; - 15,000 &#8377;</option>
+                        <option value="4">15,000 &#8377; - 1,00,000 &#8377;</option>
+                        <option value="5">Above 1,00,000 &#8377;</option>
+                    </select>
+                </li>
+                <li class="nav-item mt-3">
+                    <input type="submit" value="Filter" class="btn btn-sm btn-primary form-control">
+                </li>
+            </ul>
+        </form> -->
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

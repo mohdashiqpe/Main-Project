@@ -1,0 +1,184 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-lg-12 stretch-card mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Product Waiting for Listing</h4>
+                    <p class="card-description">Assign Tester to Product Verification</p>
+                    <div class="table-responsive pt-3">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        #
+                                    </th>
+                                    <th>
+                                        Full Name
+                                    </th>
+                                    <th>
+                                        Product Name
+                                    </th>
+                                    <th>
+                                        Base Price
+                                    </th>
+                                    <th>
+                                        Bidding Type
+                                    </th>
+                                    <th>
+                                        Category
+                                    </th>
+                                    <th>
+                                        Manage
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if product_testers_dict %}
+                                {% for asp, testers in product_testers_dict.items %}
+                                <tr class="table-info">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ asp.userauth.first_name }} {{ asp.userauth.last_name }}</td>
+                                    <td>{{ asp.brand.name }}-{{ asp.name }}</td>
+                                    <td>&#8377; {{ asp.baseprice }}</td>
+                                    <td>{% if asp.autobidding %}
+                                        Auto Bidder
+                                        {% else %}
+                                        Mannual Bidder
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ asp.maincat.name }} > {{ asp.subcat.name }}</td>
+                                    <td align="center">
+                                        <button type="button" class="btn btn-outline-dark btn-fw btn-sm"
+                                            data-toggle="collapse"
+                                            data-target="#accordionContent{{ forloop.counter }}">Manage</button>
+                                    </td>
+                                </tr>
+                                <tr align="center">
+                                    <td id="accordionContent{{ forloop.counter }}" class="collapse" colspan="6">
+                                        <table style="border-style: none;">
+                                            <tr>
+                                                <form id="frm001" action="{% url 'allocateTester' %}" method="post" onsubmit="validateCheck()">
+                                                    {% csrf_token %}
+                                                    <td>
+                                                        <p>Available Testers</p>
+                                                    </td>
+                                                    <td>
+                                                        <select name="testerid" id="selectedTester1" class="form-control">
+                                                            <option value="" disabled selected>Select the Tester
+                                                            </option>
+                                                            {% for tester in testers %} 
+                                                            <option value="{{ tester.userauth_id }}"
+                                                                title="Hello, this is option 1">
+                                                                {{ tester.userauth.first_name }}
+                                                                {{tester.userauth.last_name}}-{{ tester.workcount }}
+                                                            </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <input type="hidden" name="productId" value="{{ asp.id }}">
+                                                        <p class="d-none text-danger" id="errmsg">Please make a
+                                                            selection</p>
+                                                    </td>
+                                                    <td>
+                                                        <input type="date" name="datere" id="datePicker" class="form-control">
+                                                        <p class="d-none text-danger" id="dateErr">
+                                                            Please Select a date</p>
+                                                    </td>
+                                                    <td>
+                                                        <input type="time" name="testtime" id="testtime" class="form-control" required>
+                                                        <div class="invalid-feedback">Please provide a valid time.</div>
+                                                    </td>
+                                                    <td>
+                                                        <input type="submit" id="btnclk" value="Assign" class="btn btn-sm btn-inverse-success">
+                                                    </td>
+                                                </form>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="7" align="center"><strong>Nothing to Manage</strong></td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Tester and Tests</h4>
+                    <p class="card-description">
+                        Tester's work status
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Product
+                                    </th>
+                                    <th>
+                                        Product Name
+                                    </th>
+                                    <th>
+                                        Test Date & Time
+                                    </th>
+                                    <th>
+                                        Tester
+                                    </th>
+                                    <th>
+                                        Price
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if not managedProducts %}
+                                <tr>
+                                    <td colspan="6" align="center">
+                                        No Products has been Auth
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% for idPro in managedProducts %}
+                                <tr>
+                                    <td class="py-1">
+                                        <img src="{{ idPro.productimages_set.first.images.url }}" alt="Product Image">
+                                    </td>
+                                    <td>
+                                        {{ idPro.name }}
+                                    </td>
+                                    <td>
+                                        {{ idPro.name }}
+                                    </td>
+                                    <td>{{ idPro.testerservices.testerdata.userauth.first_name }} {{ idPro.testerservices.testerdata.userauth.last_name }}</td>
+                                    <td>
+                                        {{ idPro.baseprice }}
+                                    </td>
+                                    <td>
+                                        {% if idPro.is_tested %}
+                                        <p>verified</p>
+                                        {% else %}
+                                        <p>Not verified</p>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

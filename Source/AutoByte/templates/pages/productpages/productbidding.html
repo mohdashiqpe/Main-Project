@@ -1,0 +1,140 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="row pt-4">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">My Owned Product Bidding's</h4>
+                <p class="card-description">
+                    Your Products <code>.table</code>
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Base Price</th>
+                                <th>Highest Bid</th>
+                                <th>Highest Bidder</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if combined %}
+                            {% for j, i in combined %}
+                            <tr>
+                                <td><a href="{% url 'myproducts' %}">{{ j.name }}</a></td>
+                                <td class="font-weight-bold text-danger"><span id="tdbaseprice">{{ j.baseprice }}</span></td>
+                                {% if i.product_id != j.id %}
+                                <td class="font-weight-bold text-danger"><span>No Bidding Yet</span>
+                                {% elif i.product.baseprice > i.bidding_price %}
+                                <td class="font-weight-bold text-danger"><span id="tdhighestbid">{{ i.bidding_price }}</span>
+                                <i class="ti-arrow-down"></i></td>
+                                {% else %}
+                                <td class="font-weight-bold text-success"><span id="tdhighestbid">{{ i.bidding_price }}</span>
+                                <i class="ti-arrow-up"></i></td>
+                                {% endif %}
+                                {% if i.bidding_price %}
+                                <td style="font-weight: bolder; font-family: 'Courier New', Courier, monospace">{{ i.userauth.first_name }} {{ i.userauth.last_name }}</td>
+                                {% if i.is_final %}
+                                <td><p class="badge badge-warning">Sold to {{ i.userauth.first_name }} {{ i.userauth.last_name }} <br>
+                                    {% if j.is_sold %}
+                                    Purchased
+                                    {% else %}
+                                    Not Purchased Yet
+                                    {% endif %}
+                                </p></td>
+                                {% else %}
+                                <td><a href="{% url 'mannualbidder' j.id %}" class="btn btn-sm btn-inverse-danger">Sell for <span id="tdhighestbid">{{ i.bidding_price }}</span></a></td>
+                                {% endif %}
+                                {% else %}
+                                <td class="text-danger">Nobody Has Bidded Yet</td>
+                                <td><span class="badge badge-warning">Waiting upto <br> {{j.enddatetime}}</span></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="5" align="center"><span class="text-danger font-weight-bold text-center">No Product Available</span></td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">My Bidding's</h4>
+                <p class="card-description">
+                    Your Products <code>.table</code>
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Base Price</th>
+                                <th>Highest Bid By You</th>
+                                <th>Product Owner</th>
+                                <th>Bid Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if bids %}
+                            {% for i in bids %}
+                            <tr>
+                                <td><a href="{% url 'productinfoview' i.product.id %}">{{ i.product.name }}</a></td>
+                                <td class="font-weight-bold text-danger"><span id="tdbaseprice">{{ i.product.baseprice }}</span></td>
+                                <td class="font-weight-bold text-success"><span id="tdhighestbid">{{ i.bidding_price }}</span>
+                                {% if i.baseprice > i.highest_bid %}
+                                <i class="ti-arrow-down"></i>
+                                {% else %}
+                                <i class="ti-arrow-up"></i>
+                                {% endif %}
+                                </td>
+                                <td>{{ i.product.userauth.first_name }} {{ i.product.userauth.last_name }}</td>
+                                {% if i.is_final %}
+                                <td><a href="{% url 'checkoutview' i.product.id %}" class="btn btn-sm btn-inverse-danger">Buy for {{i.bidding_price}}</a></td>
+                                {% else %}
+                                <td><span class="badge badge-warning">Waiting</span></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="font-weight-bold text-danger" align="center">No Products Has been Bidded</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const baseprices = document.querySelectorAll("#tdbaseprice");
+    const highestbid = document.querySelectorAll("#tdhighestbid");
+    document.addEventListener("DOMContentLoaded", () => {
+        baseprices.forEach((i) => {
+            i.textContent = formatMoney(i.textContent);
+        });
+        highestbid.forEach((i) => {
+            i.textContent = formatMoney(i.textContent);
+        });
+    });
+
+
+    function formatMoney(amount) {
+        var formattedIncome = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR' // You can change the currency code as needed
+        }).format(Number(amount));
+        return formattedIncome;
+    }
+</script>
+{% endblock %}

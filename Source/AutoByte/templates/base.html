@@ -1,0 +1,12 @@
+{% load static %}
+{% include "header.html" %}
+<div class="container-fluid page-body-wrapper">
+    {% include "sidebar.html" %}
+    {% if userincheckout or productdetials or usercart or atSuccessPage %}
+    <div class="main-panel" style="width: 100vw;">
+    {% else %}
+    <div class="main-panel">
+    {% endif %}
+        {% block content %}
+        {% endblock %}
+        {% include "footer.html" %}

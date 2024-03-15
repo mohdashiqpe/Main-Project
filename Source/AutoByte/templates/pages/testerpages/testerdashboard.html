@@ -1,0 +1,278 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-lg-12 stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">User Product Table</h4>
+                    <p class="card-description">
+                        User Products<code>Pending For Approval</code>
+                    </p>
+                    <div class="table-responsive pt-3">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        User Email
+                                    </th>
+                                    <th>
+                                        Owner Name
+                                    </th>
+                                    <th>
+                                        Category
+                                    </th>
+                                    <th>
+                                        Product
+                                    </th>
+                                    <th>
+                                        Test Date & Time
+                                    </th>
+                                    <!-- <th>
+                                        Rating
+                                    </th> -->
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <input type="hidden" id="contentcount" value="{{ unverified|length }}"/>
+                                {% if unverified %}
+                                {% for u in unverified %}
+                                <input type="hidden" id="testerID" value="{{testerData}}">
+                                <tr class="table-warning">
+                                    <input type="hidden" id="pid" value="{{u.id}}">
+                                    <td>{{ u.userauth_id }}</td>
+                                    <td>{{ u.userauth.first_name }} {{ u.userauth.last_name }}</td>
+                                    <td>{{ u.maincat.name }} > {{ u.subcat.name }} > {{ u.brand.name }}</td>
+                                    <td>{{ u.name }}</td>
+                                    <td>{{ u.testerservices.testdate }}, {{ u.testerservices.testtime }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" data-toggle="collapse"
+                                            data-target="#collapse{{ u.id }}">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="collapse" id="collapse{{ u.id }}" align="center">
+                                        <table class="table">
+                                            <form action="{% url 'updatequalitycheck' %}?id={{ u.id }}" method="post" enctype="multipart/form-data" id="form{{forloop.counter}}" onsubmit="validateform({{forloop.counter}});">
+                                                {% csrf_token %}
+                                                <tr>
+                                                    <th>Product ID</th>
+                                                    <td>P{{u.id}}</td>
+                                                    <th>Product Name</th>
+                                                    <td>{{u.name}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Product Category</th>
+                                                    <td>{{u.maincat.name}} >
+                                                        {{u.subcat.name}} >
+                                                        {{u.brand.name}}
+                                                    </td>
+                                                    <th>Product Location</th>
+                                                    <td> <strong>Address:</strong>
+                                                        {{u.loca.address}} <br>
+                                                        <strong>Street:</strong>
+                                                        {{u.loca.street}} <br>
+                                                        <strong>City:</strong>{{u.loca.city}}
+                                                        <br>
+                                                        <strong>State:</strong>{{u.loca.state}}
+                                                        <br>
+                                                        <strong>Country:</strong>{{u.loca.country}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Product Base Price</th>
+                                                    <td>{{u.baseprice}}</td>
+                                                    <td>
+                                                        <select name="priceSel{{u.id}}"
+                                                            id="baseprice{{forloop.counter}}" class="form-control">
+                                                            <option value="-1">Select</option>
+                                                            <option value="0">Approve</option>
+                                                            <option value="1">Update</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="price{{u.id}}"
+                                                            id="basepriceinput{{forloop.counter}}" class="form-control"
+                                                            placeholder="Update if Any">
+                                                        <div id="basepriceerror{{forloop.counter}}"></div>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Product Description</th>
+                                                    <td>{{u.description}}</td>
+                                                    <td>
+                                                        <select name="descSel{{u.id}}"
+                                                            id="description{{forloop.counter}}" class="form-control">
+                                                            <option value="-1">Select</option>
+                                                            <option value="0">Verified</option>
+                                                            <option value="1">Update</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="desc{{u.id}}"
+                                                            id="descriptioninput{{forloop.counter}}"
+                                                            class="form-control" placeholder="Update if Any">
+                                                        <div id="descerr{{forloop.counter}}"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Accident Remarks</th>
+                                                    <td>
+                                                        {% if u.accidents is None %}
+                                                        {{u.accidents}}
+                                                        {% else %}
+                                                        No Accidents
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <select name="accSel{{u.id}}" id="accident{{forloop.counter}}"
+                                                            class="form-control">
+                                                            <option value="-1">Select</option>
+                                                            <option value="0">Verified</option>
+                                                            <option value="1">Update</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="acc{{u.id}}"
+                                                            id="accidentinput{{forloop.counter}}" class="form-control"
+                                                            placeholder="Update if Any">
+                                                        <div id="accerr{{forloop.counter}}"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Year of Manufacture</th>
+                                                    <td>{{u.YearOfMan}}</td>
+                                                    <td>
+                                                        <select name="man{{u.id}}" id="yom{{forloop.counter}}"
+                                                            class="form-control">
+                                                            <option value="">Select</option>
+                                                            <option value="0">Verified</option>
+                                                            <option value="1">Update</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="date" id="datePicker{{forloop.counter}}"
+                                                            name="datePicker{{u.id}}" class="form-control">
+                                                        <div id="dateerr{{forloop.counter}}"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                </tr>
+                                                <tr>
+                                                    <th>Product Images</th>
+                                                    <td>
+                                                        {% for image in u.productimages_set.all %}
+                                                        <img src="{{image.images.url}}" alt=""
+                                                            style="width: 100px; height: 100px;">
+                                                        {% endfor %}
+                                                    </td>
+                                                    <th>Product Images By Tester</th>
+                                                    <td>
+                                                        <input type="file" name="productImg{{u.id}}"
+                                                            id="testerimage{{forloop.counter}}" class="form-control"
+                                                            multiple>
+                                                        <div id="imgerr"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4">
+                                                        <select name="rating{{u.id}}" id="endrating{{forloop.counter}}"
+                                                            class="form-control md-1">
+                                                            <option value="0">Select the Rating
+                                                            </option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                        </select>
+                                                        <div id="ratingerr{{forloop.counter}}"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4">
+                                                        add Your 3D Model
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" align="center">
+                                                        <input type="submit" class="btn btn-inverse-dark"
+                                                            id="submitbtn{{forloop.counter}}" value="SUBMIT">
+                                                    </td>
+                                                </tr>
+                                            </form>
+                                        </table>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr class="table-warning">
+                                    <td colspan="6" align="center">No Products to Validate</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-12 stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">User Product Table</h4>
+                    <p class="card-description">
+                        User Products<code>Approved By You</code>
+                    </p>
+                    <div class="table-responsive pt-3">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        #
+                                    </th>
+                                    <th>
+                                        User
+                                    </th>
+                                    <th>
+                                        Product
+                                    </th>
+                                    <th>
+                                        Rating
+                                    </th>
+                                    <th>
+                                        Approved On
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if verified %}
+                                {% for v in verified %}
+                                <tr class="table-success">
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{v.userauth.first_name}} {{v.userauth.last_name}}</td>
+                                    <td>{{v.name}}</td>
+                                    <td>{{v.testerrating}}</td>
+                                    <td>{{ v.testerservices.completed_date }}, {{ v.testerservices.completed_time }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr class="table-warning">
+                                    <td colspan="4" align="center">No Products Validated by You</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

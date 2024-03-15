@@ -1,0 +1,92 @@
+{% load static %}
+<!-- <footer class="footer">
+    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright ©
+            2021. Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin
+                template</a> from BootstrapDash.
+            All rights reserved.</span>
+        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made
+            with <i class="ti-heart text-danger ml-1"></i></span>
+    </div>
+    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Distributed by
+            <a href="https://www.themewagon.com/" target="_blank">Themewagon</a></span>
+    </div>
+</footer> -->
+<!-- partial -->
+</div>
+<!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+
+<!-- plugins:js -->
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="{% static 'vendors/chart.js/Chart.min.js' %}"></script>
+<script src="{% static 'vendors/datatables.net/jquery.dataTables.js' %}"></script>
+<script src="{% static 'vendors/datatables.net-bs4/dataTables.bootstrap4.js' %}"></script>
+<script src="{% static 'js/dataTables.select.min.js' %}"></script>
+
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="{% static 'js/off-canvas.js' %}"></script>
+<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/todolist.js' %}"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="{% static 'js/dashboard.js' %}"></script>
+<script src="{% static 'js/Chart.roundedBarCharts.js' %}"></script>
+
+<script src="{% static 'dev_js/tagids.js' %}"></script>
+<script src="{% static 'dev_js/validations.js' %}"></script>
+
+{% if userinsettings %}
+<script src="{% static 'js/file-upload.js' %}"></script>
+<script src="{% static 'dev_js/settingsCSC.js' %}"></script>
+<script src="{% static 'dev_js/settingsPage.js' %}"></script>
+<script src="{% static 'dev_js/addressBarController.js' %}"></script>
+{% endif %}
+{% if ataddtesterview %}
+<script src="{% static 'dev_js/addtester.js' %}"></script>
+<script src="{% static 'dev_js/categorypage/loadCategory.js' %}"></script>
+<script src="{% static 'dev_js/categorypage/loadVariables.js' %}"></script>
+{% endif %}
+{% if inaddcategory %}
+<script src="{% static 'dev_js/categorypage/loadCategory.js' %}"></script>
+<script src="{% static 'dev_js/categorypage/loadVariables.js' %}"></script>
+<script src="{% static 'dev_js/categorypage/validateAddCat.js' %}"></script>
+{% endif %}
+{% if userinaddproduct %}
+<script src="{% static 'vendors/typeahead.js/typeahead.bundle.min.js' %}"></script>
+<script src="{% static 'vendors/select2/select2.min.js' %}"></script>
+<script src="{% static 'dev_js/categorypage/loadVariables.js' %}"></script>
+<script src="{% static 'dev_js/productpage/addProductValidation.js' %}"></script>
+<script src="{% static 'dev_js/categorypage/loadCategory.js' %}"></script>
+<script src="{% static 'js/file-upload.js' %}"></script>
+<script src="{% static 'js/typeahead.js' %}"></script>
+<script src="{% static 'js/select2.js' %}"></script>
+<!-- <script src="{% static 'dev_js/productpage/.js' %}"></script> -->
+{% endif %}
+{% if useratmanageproduct %}
+<script src="{% static 'dev_js/productpage/manageproduct.js' %}"></script>
+{% endif %}
+{% if testerdashboard %}
+<script src="{% static 'dev_js/testerdash/testerdash.js' %}"></script>
+{% endif %}
+{% if userinindex %}
+<script src="{% static 'dev_js/indexpage/indexpage.js' %}"></script>
+<script src="{% static 'dev_js/indexpage/search.js' %}"></script>
+<script src="{% static 'dev_js/indexpage/loadcat.js' %}"></script>
+{% endif %}
+{% if paymentid %}
+<script src="{% static 'dev_js/CSC_API.js' %}"></script>
+{% endif %}
+<!-- End custom js for this page-->
+</body>
+
+</html>

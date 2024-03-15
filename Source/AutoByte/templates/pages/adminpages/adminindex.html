@@ -1,0 +1,337 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<!-- Admin Page Code Goes Here -->
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+            <h3 class="font-weight-bold">Welcome {{ user.first_name }} {{ user.last_name }}</h3>
+            <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span class="text-primary">3
+                    unread alerts!</span></h6><br>
+        </div>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{usersdata|length}} Registered Users</h4>
+                    <p class="card-description">
+                        Registered User's both <code>active and inactive</code> users
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Full name</th>
+                                    <th>Email</th>
+                                    <th>Phone No:</th>
+                                    <th>Address Location</th>
+                                    <th>User Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if usersdata %}
+                                {% for user in usersdata %}
+                                {% if not user.is_active %}
+                                <tr style="background-color: black; color: aliceblue;">
+                                    {% else %}
+                                <tr>
+                                    {% endif %}
+                                    {% if user.profilepic %}
+                                    <td><img src="{{user.profilepic.url}}" alt=""></td>
+                                    {% else %}
+                                    <td><img src="{% static 'images/faces/avatar.jpeg' %}" alt="">
+                                    </td>
+                                    {% endif %}
+                                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                    <td>{{ user.email }}</td>
+                                    {% if user.userloca_set.first.contact_number %}
+                                    <td>{{ user.userloca_set.first.contact_number }}</td>
+                                    {% else %}
+                                    <td style="color: red;">Contact Number Unavailable</td>
+                                    {% endif %}
+                                    {% if user.userloca_set.first.country %}
+                                    <td>
+                                        {{ user.userloca_set.first.country }}, {{ user.userloca_set.first.state }},{{
+                                        user.userloca_set.first.city }}
+                                    </td>
+                                    {% else %}
+                                    <td style="color: red;">Location Unavailable</td>
+                                    {% endif %}
+                                    <td class="pr-1" style="font-weight: 900;">
+                                        {% if user.is_active %}
+                                        <span style="color: azure;" class="badge bg-success">Active</span>
+                                        {% else %}
+                                        <span style="color: red;" class="badge bg-dark">Suspended</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if user.is_active %}
+                                        <a href="" id="disableUser"
+                                            class="btn btn-inverse-warning btn-sm mb-2 ml-2">Suspend</a><br>
+                                        {% else %}
+                                        <a href="" class="btn btn-inverse-warning btn-sm mb-2 ml-2">Un-Suspend</a><br>
+                                        {% endif %}
+                                        <button class="btn btn-inverse-info btn-sm ml-2 accordion-button"
+                                            onclick="toggleAccordion(this)">Full Info</button>
+                                    </td>
+                                </tr>
+                                <tr class="accordion-content" style="display: none;">
+                                    <td colspan="7">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    {% if user.profilepic %}
+                                                    <img class="rounded float-start" src="{{user.profilepic.url}}"
+                                                        style="width: 100%; height: 100%;" alt="">
+                                                    {% else %}
+                                                    <img class="rounded float-start"
+                                                        src="{% static 'images/faces/avatar.jpeg' %}"
+                                                        style="width: 100%; height: 100%;" alt="">
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p style="display: inline-block;"><strong>Full Name:</strong>
+                                                        {{user.first_name }} {{ user.last_name }}
+                                                    </p><br>
+                                                    <p style="display: inline-block;"><strong>User Name:</strong>
+                                                        {{user.username}}
+                                                    </p><br>
+                                                    <p style="display: inline-block;"><strong>Email:</strong>
+                                                        {{user.email}}
+                                                    </p><br>
+                                                    {% if user.userloca_set.first.contact_number %}
+                                                    <p style="display: inline-block;"><strong>Contact Number:</strong>
+                                                        {{ user.userloca_set.first.contact_number }}
+                                                    </p><br>
+                                                    {% else %}
+                                                    <p style="display: inline-block;"><strong>Contact Number:</strong>
+                                                        <span style="color: red;">Unavailable</span>
+                                                    </p><br>
+                                                    {% endif %}
+                                                    <p style="display: inline-block;"><strong>Signed In On:</strong>
+                                                        {{user.date_joined}}
+                                                    </p><br>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    {% if user.userloca_set.first.city %}
+                                                    <p style="display: inline-block;"><strong>Country:</strong>
+                                                        {{user.userloca_set.first.country}}
+                                                    </p><br>
+                                                    <p style="display: inline-block;"><strong>State:</strong>
+                                                        {{user.userloca_set.first.state}}
+                                                    </p><br>
+                                                    <p style="display: inline-block;"><strong>City:</strong>
+                                                        {{user.userloca_set.first.city}}
+                                                    </p><br>
+                                                    {% else %}
+                                                    <p style="display: inline-block;"><strong>Country:</strong> <span
+                                                            style="color: red;">Unavailable</span></p><br>
+                                                    <p style="display: inline-block;"><strong>State:</strong> <span
+                                                            style="color: red;">Unavailable</span></p><br>
+                                                    <p style="display: inline-block;"><strong>City:</strong> <span
+                                                            style="color: red;">Unavailable</span></p><br>
+                                                    {% endif %}
+                                                    <p style="display: inline-block;"><strong>Last Login:</strong>
+                                                        {{user.last_login}}
+                                                    </p><br>
+                                                    <p style="display: inline-block;"><strong>User Status:</strong>
+                                                        {% if user.is_active %}
+                                                        <span style="color: azure;"
+                                                            class="badge bg-success">Active</span>
+                                                        {% else %}
+                                                        <span style="color: red;" class="badge bg-dark">Suspended</span>
+                                                        {% endif %}
+                                                    </p><br>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button class="btn btn-primary mt-5">User Activity</button><br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <!-- End of Pagination -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{testerdata|length}} Quality Testers</h4>
+                    <p class="card-description">
+                        Something About Quality Tester
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Phone no</th>
+                                    <th>Work Location</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if testerdata %}
+                                {% for tester in testerdata %}
+                                {% if not tester.is_active %}
+                                <tr style="background-color: black; color: aliceblue;">
+                                    {% else %}
+                                <tr>
+                                    {% endif %}
+                                    {% if tester.profilepic %}
+                                    <td><img src="{{tester.profilepic.url}}" alt=""></td>
+                                    {% else %}
+                                    <td><img src="{% static 'images/faces/avatar.jpeg' %}" alt="">
+                                    </td>
+                                    {% endif %}
+                                    <td>{{ tester.username }}</td>
+                                    <td>{{ tester.first_name }} {{ tester.last_name }}</td>
+                                    {% if tester.userloca_set.first.contact_number %}
+                                    <td>{{ tester.userloca_set.first.contact_number }}</td>
+                                    {% else %}
+                                    <td style="color: red;">Contact Number Unavailable</td>
+                                    {% endif %}
+                                    {% if tester.userloca_set.first.city %}
+                                    <td>
+                                        {{ tester.userloca_set.first.country}}, {{tester.userloca_set.first.state}},
+                                        {{tester.userloca_set.first.city }}
+                                    </td>
+                                    {% else %}
+                                    <td style="color: red;">Location Unavailable</td>
+                                    {% endif %}
+                                    <td class="pr-1" style="font-weight: 900;">
+                                        {% if tester.is_active %}
+                                        <span style="color: azure;" class="badge bg-success">Active</span>
+                                        {% else %}
+                                        <span style="color: red;" class="badge bg-dark">Suspended</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if tester.is_active %}
+                                        <a href="" class="btn btn-inverse-warning btn-sm mb-2 ml-2">Suspend</a>
+                                        <button class="btn btn-inverse-danger btn-sm mb-2 ml-2">Send<br>Termination
+                                            Letter</button><br>
+                                        <br>
+                                        {% else %}
+                                        <a href="" class="btn btn-inverse-warning btn-sm mb-2 ml-2">Un-Suspend</a>
+                                        <button class="btn btn-inverse-danger btn-sm mb-2 ml-2">Send<br>Termination
+                                            Letter</button><br>
+                                        {% endif %}
+                                        <button class="btn btn-inverse-info btn-sm ml-2 accordion-button"
+                                            onclick="toggleAccordion(this)">Full Info</button>
+                                        <button class="btn btn-inverse-success btn-sm ml-3">Portfolio</button>
+                                        <!-- <td>
+                                                                <button
+                                                                    class="btn btn-inverse-warning btn-sm mb-2 ml-2">Suspend</button>
+                                                                
+                                                                <button class="btn btn-inverse-info btn-sm ml-2">Full
+                                                                    Info</button>
+                                                                
+                                                            </td> -->
+                                    </td>
+                                </tr>
+                                <tr class="accordion-content" style="display: none;">
+                                    <td colspan="7">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    {% if tester.profilepic %}
+                                                    <img class="rounded float-start" src="{{tester.profilepic.url}}"
+                                                        style="width: 100%; height: 100%;" alt="">
+                                                    {% else %}
+                                                    <img class="rounded float-start"
+                                                        src="{% static 'images/faces/avatar.jpeg' %}"
+                                                        style="width: 100%; height: 100%;" alt="">
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p style="display: inline-block;"><strong>Tester Name:</strong>
+                                                        {{tester.first_name}} {{tester.last_name}}
+                                                    </p><br>
+                                                    <p style="display: inline-block;"><strong>Email:</strong>
+                                                        {{tester.email}}
+                                                    </p><br>
+                                                    {% if tester.userloca_set.first.contact_number %}
+                                                    <p style="display: inline-block;"><strong>Contact Number:</strong>
+                                                        {{tester.userloca_set.first.contact_number}}
+                                                    </p><br>
+                                                    {% else %}
+                                                    <p style="display: inline-block;"><strong>Contact Number:</strong>
+                                                        <span style="color: red;">Unavailable</span>
+                                                    </p><br>
+                                                    {% endif %}
+                                                    <p style="display: inline-block;"><strong>Signed In On:</strong>
+                                                        {{tester.date_joined}}
+                                                    </p><br>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    {% if tester.userloca_set.first.city %}
+                                                    <p style="display: inline-block;"><strong>Country:</strong>
+                                                        {{tester.userloca_set.first.country}}
+                                                    </p><br>
+                                                    <p style="display: inline-block;"><strong>State:</strong>
+                                                        {{tester.userloca_set.first.state}}
+                                                    </p><br>
+                                                    <p style="display: inline-block;"><strong>City:</strong>
+                                                        {{tester.userloca_set.first.city}}
+                                                    </p><br>
+                                                    {% else %}
+                                                    <p style="display: inline-block;"><strong>Country:</strong> <span
+                                                            style="color: red;">Unavailable</span></p><br>
+                                                    <p style="display: inline-block;"><strong>State:</strong> <span
+                                                            style="color: red;">Unavailable</span></p><br>
+                                                    <p style="display: inline-block;"><strong>City:</strong> <span
+                                                            style="color: red;">Unavailable</span></p><br>
+                                                    {% endif %}
+                                                    <p style="display: inline-block;"><strong>Last Login:</strong>
+                                                        {{tester.last_login}}
+                                                    </p><br>
+                                                    <p style="display: inline-block;"><strong>User Status:</strong>
+                                                        {% if tester.is_active %}
+                                                        <span style="color: azure;"
+                                                            class="badge bg-success">Active</span>
+                                                        {% else %}
+                                                        <span style="color: red;" class="badge bg-dark">Suspended</span>
+                                                        {% endif %}
+                                                    </p><br>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button class="btn btn-primary mt-5">User Activity</button><br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function toggleAccordion(button) {
+        var content = button.parentElement.parentElement.nextElementSibling;
+        if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'table-row';
+            button.textContent = "Less Info"
+        } else {
+            content.style.display = 'none';
+            button.textContent = "Full Info"
+        }
+    }
+</script>
+{% endblock %}
