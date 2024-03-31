@@ -15,3 +15,4 @@ class Orders(models.Model):
     orderdatetime = models.DateTimeField(auto_now_add=True)
     order_status = models.CharField(max_length=20, default='pending')
     amount = models.IntegerField(null=True)
+    buyer = models.ForeignKey(UserAuth, on_delete=models.CASCADE, null=True)

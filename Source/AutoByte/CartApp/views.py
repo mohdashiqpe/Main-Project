@@ -1,3 +1,5 @@
+import threading
+import time
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from django.contrib.auth import login
@@ -8,6 +10,8 @@ from .models import *
 from django.views.decorators.csrf import csrf_exempt
 import razorpay
 from datetime import datetime
+import schedule
+from django.utils import timezone
 
 # Create your views here.
 def checkoutview(request, product_id):
@@ -44,7 +48,9 @@ def add_address(request, product_id):
     return redirect(f"/checkoutview/{product_id}")
 
 
-def autobidder_view(request):
+def autobidder_view(request, product_id):
+    biddingprices = BiddingPrice.objects.filter(product_id=product_id).order_by('-bidding_price').first()
+
     return HttpResponse("Auto Bidder View")
 
 def mannualbidder_view(request, product_id):
@@ -63,29 +69,38 @@ def usercart_view(request):
 
 @csrf_exempt
 def successPage(request):
+    # Getting Data from Hidden Inputs
     userloca_id = request.POST['userlocaid']
     product_id = request.POST['productID']
     bidprice = request.POST['bidprice']
     emailid = request.POST['emailid']
     paymentId = request.POST['razorpay_payment_id']
+
+    # Initialising User Object for Logging in
     userauth = UserAuth.objects.get(email=emailid)
     login(request, userauth)
     print(f"Successfully Logged in as {request.user.first_name} {request.user.last_name}")
+
+    # Retrieving Payment Details
     client = razorpay.Client(auth=("rzp_test_l4eDblehZr7MDi", "ymaImOTAtnz4VoWMZHK9qwOQ"))
     payment_details = client.payment.fetch(paymentId)
     print(payment_details)
+
+    # Creating Order
     order = Orders()
     product = Product.objects.get(id=product_id)
     order.product = product
     order.userloca = UserLoca.objects.get(id=userloca_id)
     order.amount = float(bidprice)
+    order.buyer = request.user
     order.save()
+
+    # Updating Product DB
     product.is_sold = True
     product.sold_to = request.user
     product.sold_at_datetime = datetime.now()
     product.save()
-    # print(f"Product Id: {product_id} at Location Id: {userloca_id}")
-    # return HttpResponse("Success")
+
     context = {
         "atSuccessPage": True,
         "paymentId": payment_details,
@@ -97,6 +112,36 @@ def successPage(request):
 def myOrders_view(request):
     context = {
         "myorders": True,
-        "products": Product.objects.filter(sold_to_id=request.user.email)
+        "products": Orders.objects.filter(buyer=request.user)
     }
     return render(request, "pages/cart&checkout/myorders.html", context)
+
+
+def checkProductStatus():
+    product = Product.objects.filter(Q(is_sold=False) & Q(autobidding=True))
+    for i in product:
+        if i.enddatetime is not None:
+            if i.enddatetime >= timezone.now():
+                auto_Update_Bid(i.id)
+            else:
+                print("Time Not Yet Reached")
+        else:
+            print("No Date is Found")
+
+
+def auto_Update_Bid(product_id):
+    product = Product.objects.get(id=product_id)
+    if product.biddingprice_set.all().count() > 1:
+        highest_bidder = BiddingPrice.objects.filter(product_id=product.id).order_by('-bidding_price').first()
+        if product.baseprice < highest_bidder.bidding_price:
+            print(f'Product with ID: {product_id} and Name: {product.name} has been Completed Bidding with Highest Bidder {highest_bidder.userauth.username}')
+        else:
+            print(f'Product Has no Better Bidding')
+    else:
+        print(f'No Bidding Available For {product.name}')
+
+def manuallySelectedBid(request, bid_id):
+    bid_instance = BiddingPrice.objects.get(id=bid_id)
+    bid_instance.is_final = True
+    bid_instance.save()
+    return redirect('productbidding')

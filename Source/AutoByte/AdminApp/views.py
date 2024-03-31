@@ -14,7 +14,7 @@ def adminView(request):
     context = {
         "inadminview": True,
         "usersdata": UserAuth.objects.filter(UserRole=2),
-        "testerdata": UserAuth.objects.filter(UserRole=3)
+        "testerdata": TesterData.objects.all(),
     }
     if request.user.is_authenticated:
         if request.user.UserRole != 1:

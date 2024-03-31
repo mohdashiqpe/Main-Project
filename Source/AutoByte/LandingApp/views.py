@@ -13,13 +13,18 @@ from django.core.serializers import serialize
 from django.db.models import Q
 from ProductApp.views import load_data_from_excel
 
-
 def homePage(request):
+    products = Product.objects.filter(
+        is_tested=True,
+        is_sold=False,
+    ).exclude(biddingprice__is_final=True)
+
     context = {
         "userinindex": True,
-        "products": Product.objects.filter(Q(is_tested=True) & Q(is_sold=False)),
+        "products": products,
         "filters": SubCategory.objects.all()
     }
+    
     if request.user.is_authenticated:
         if request.user.UserRole == 1:
             return redirect('adminView')
@@ -28,9 +33,8 @@ def homePage(request):
         elif request.user.UserRole == 3:
             return redirect('testerdashboard')
         elif request.user.UserRole == 2:
-            context['products'] = Product.objects.filter(Q(is_tested=True) & ~Q(userauth_id =request.user.email) & Q(is_sold=False))
-
-    print(context['products'])
+            context['products'] = products.exclude(userauth_id=request.user.email)
+            
     return render(request, "pages/index.html", context)
 
 def register(request):

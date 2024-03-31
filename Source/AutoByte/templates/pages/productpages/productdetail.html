@@ -29,7 +29,8 @@
 
                 </div>
                 <div class="details col-md-6">
-                    <h3 class="product-title">{{ product.name }}</h3>
+                    <h3 class="product-title">{{product.brand.name}} {{ product.name }}</h3>
+                    <p>Product Sold By: <strong>{{product.userauth.username}}</strong></p>
                     <p class="product-description">{{ product.description }}</p>
                     <p class="product-description">{{ product.maincat.name }} / {{ product.subcat.name }}</p>
                     <!-- <h4 class="price">current price: <span>&#x20B9;{{ product.baseprice|floatformat:"2" }}</span></h4> -->
@@ -46,7 +47,8 @@
                         <!-- <a href="" class="btn btn-inverse-success">Bid Now</a> -->
                         <a href="" class="btn btn-warning">Add to Cart</a>
                     </div>
-                    {% if not user_has_bid %}
+                    <div class="">
+                        {% if not user_has_bid %}
                     <li class="text-danger">No Bids by You</li>
                     {% else %}
                     <h4 class="text-success font-weight-bold">Bids by You</h4>
@@ -58,6 +60,7 @@
                         {% endif %}
                         {% endfor %}
                     </ul>
+                    </div>
                 </div>
             </div> 
         </div>

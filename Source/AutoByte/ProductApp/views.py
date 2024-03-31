@@ -8,10 +8,11 @@ from django.core.serializers import serialize
 from .models import *
 from datetime import datetime
 from django.db.models import Max
-from django.db.models import Q
+from django.db.models import Q, Subquery
+from django.db.models import Case, When, BooleanField, OuterRef
 
 def addproductview(request): 
-    # Product.objects.filter(id=1).delete()
+    # Product.objects.all().delete()
     context = {
         "userinaddproduct": True,
         "userprod": Product.objects.filter(userauth_id=request.user.email)
@@ -100,6 +101,8 @@ def productinfoview(request, product_id):
     return render(request, "pages/productpages/productdetail.html", context)
 
 def bidbyuser(request, productid):
+    if not request.user.is_authenticated:
+        return redirect('login')
     price = request.POST['price']
     product = Product.objects.get(id=productid)
     biddingprice = BiddingPrice()
@@ -107,9 +110,6 @@ def bidbyuser(request, productid):
     biddingprice.userauth = request.user
     biddingprice.bidding_price = price
     biddingprice.save()
-    if product.autobidding:
-        if float(product.baseprice) > float(biddingprice.bidding_price):
-            return HttpResponse(f'Auto Bidding Done for {product.name}')
     # return HttpResponse(f'You Have Reached with id {price}')
     return redirect(f'/productinfoview/{productid}')
 
@@ -128,36 +128,40 @@ def my_products_view(request):
 
 
 def product_bidding_view(request):
-    ownedProducts = Product.objects.filter(userauth_id=request.user.email)
-
+    ownedProducts = request.user.product.all()
+    
+    final_bidder = False
     biddedProducts = []
     for item in ownedProducts:
-        print(item)
         if BiddingPrice.objects.filter(product_id=item.id).exists():
-            biddedProducts.append(BiddingPrice.objects.filter(product_id=item.id).order_by('-bidding_price').first())
+            bidding_price = BiddingPrice.objects.filter(product_id=item.id)
+            if bidding_price.filter(is_final=True).exists:
+                biddedProducts.append(bidding_price.filter(is_final=True).order_by('-bidding_price').first())
+            else:
+                biddedProducts.append(bidding_price.order_by('-bidding_price').first())
 
-    # products = Product.objects.filter(userauth_id=request.user.email)
-    # for product in products:
-    #     highest_bid = product.biddingprice_set.aggregate(Max('bidding_price'))['bidding_price__max']
-    #     if highest_bid is not None:
-    #         highest_bidder_price = product.biddingprice_set.filter(bidding_price=highest_bid).first()
-    #         highest_bidder = highest_bidder_price.userauth if highest_bidder_price else None
-    #     else:
-    #         highest_bidder = None
+    for item in ownedProducts:
+        ownedProductBids = item.biddingprice_set.all()
+        if ownedProductBids.filter(is_final=True).exists():
+            item.highestBidder = ownedProductBids.filter(is_final=True).first()
+        else:
+            item.highestBidder = ownedProductBids.order_by('-bidding_price').first()
 
-    #     product.highest_bid = highest_bid if highest_bid is not None else 0
-    #     product.highest_bidder = highest_bidder
-    
-    product_ids = BiddingPrice.objects.filter(userauth=request.user).values_list('product', flat=True).distinct()
-    max_bidding_prices = []
-    for product_id in product_ids:
-        max_bid = BiddingPrice.objects.filter(product_id=product_id).order_by('-bidding_price').first()
-        max_bidding_prices.append(max_bid)
+    print(biddedProducts)
+
+    mybidds = request.user.biddingprice_set.all()
+
+    finalised_bids = set(
+        BiddingPrice.objects.filter(is_final=True).values_list('product_id', flat=True)
+    )
+
+    for bid in mybidds:
+        bid.is_sold_to_others = bid.product_id in finalised_bids
 
     context = {
         'bidding': True,
-        'combined': zip_longest(ownedProducts, biddedProducts),
-        'bids': max_bidding_prices
+        'combined': ownedProducts, 
+        'bids': mybidds,
     }
     return render(request, "pages/productpages/productbidding.html", context)
 

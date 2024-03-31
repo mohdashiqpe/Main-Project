@@ -1,11 +1,13 @@
+import os
 from django.db import models
 from LandingApp.models import *
 from AdminApp.models import *
 from TesterApp.models import *
+from django.conf import settings
 
 class Product(models.Model):
     # Product Authenticity
-    userauth = models.ForeignKey(UserAuth, on_delete=models.CASCADE, null=True, limit_choices_to={'UserRole': 2}, related_name='userauth')
+    userauth = models.ForeignKey(UserAuth, on_delete=models.CASCADE, null=True, limit_choices_to={'UserRole': 2}, related_name='product')
     tester = models.ForeignKey(UserAuth, on_delete=models.CASCADE, limit_choices_to={'UserRole': 3}, null=True, related_name='tester')
     loca = models.ForeignKey(UserLoca, on_delete=models.CASCADE, null=True)
     # Product Conditions
@@ -38,7 +40,11 @@ class BiddingPrice(models.Model):
     userauth = models.ForeignKey(UserAuth, on_delete=models.CASCADE, null=True)
     is_final = models.BooleanField(default=False)
 
+def product_image_path(instance, filename):
+    return f'products/{instance.product.name}({instance.product.id})/{filename}'
+
 class ProductImages(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
-    images = models.ImageField(upload_to='products/', null=True, blank=True)
+    images = models.ImageField(upload_to=product_image_path, null=True, blank=True)
     is_testerimage = models.BooleanField(default=False)
+

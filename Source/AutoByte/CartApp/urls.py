@@ -8,4 +8,6 @@ urlpatterns = [
     path('usercart/', usercart_view, name='usercart'),
     path('successpage/', successPage, name='successpage'),
     path('myorders/', myOrders_view, name='myorders'),
+    path('autobidder/<int:product_id>', autobidder_view, name='autobidding'),
+    path('mannualySelectedBidder/<int:bid_id>', manuallySelectedBid, name='mannualySelectedBidder'),
 ]

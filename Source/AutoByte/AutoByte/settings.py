@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_celery_beat',
+    'mathfilters',
+
     'LandingApp',
     'AdminApp',
     'TesterApp',
@@ -146,3 +149,14 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'zstore98981@gmail.com'
 EMAIL_HOST_PASSWORD = 'tbdi lari wgih zooi'
+
+CELERY_BEAT_SCHEDULE = {
+    "scheduled_task": {
+        "task": "CartApp.tasks.add",
+        "schedule": 2.0,
+    },
+    "productCheck": {
+        "task": "CartApp.tasks.CheckProductStatus",
+        "schedule": 10.0
+    },
+}

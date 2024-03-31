@@ -197,7 +197,10 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        #
+                                        Sl. No
+                                    </th>
+                                    <th>
+                                        ID
                                     </th>
                                     <th>
                                         Category
@@ -220,6 +223,7 @@
                                     {% else %}
                                 <tr class="table-success">
                                     {% endif %}
+                                    <td>{{ forloop.counter }}</td>
                                     <td>{{ product.id }}</td>
                                     <td>{{ product.maincat.name }} >
                                         {{ product.subcat.name }} >
@@ -236,9 +240,9 @@
                                     <td>{{product.baseprice}}</td>
                                     <td>
                                         {% if product.is_tested %}
-                                        Approved
+                                        <span class="badge badge-success">Approved</span>
                                         {% else %}
-                                        Not Approved
+                                        <span class="badge badge-danger">Not Approved</span>
                                         {% endif %}
                                     </td>
                                 </tr>

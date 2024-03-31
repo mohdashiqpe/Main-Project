@@ -1,6 +1,6 @@
 
-
 document.addEventListener("DOMContentLoaded", () => {
+    
 });
 
 // function formatMoney(tagid) {
@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
 //     console.log(formattedPrice);
 //     pricetag.textContent = 'Price: ' + formattedPrice;
 // }
+
+
 
 
 function inputToMoney(counter){

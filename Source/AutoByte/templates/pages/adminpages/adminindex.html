@@ -52,8 +52,7 @@
                                     {% endif %}
                                     {% if user.userloca_set.first.country %}
                                     <td>
-                                        {{ user.userloca_set.first.country }}, {{ user.userloca_set.first.state }},{{
-                                        user.userloca_set.first.city }}
+                                        {{ user.userloca_set.first.country }}, {{ user.userloca_set.first.state }},{{user.userloca_set.first.city }}
                                     </td>
                                     {% else %}
                                     <td style="color: red;">Location Unavailable</td>
@@ -177,47 +176,50 @@
                                     <th>Category</th>
                                     <th>Phone no</th>
                                     <th>Work Location</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% if testerdata %}
                                 {% for tester in testerdata %}
-                                {% if not tester.is_active %}
+                                {% if not tester.userauth.is_active %}
                                 <tr style="background-color: black; color: aliceblue;">
                                     {% else %}
                                 <tr>
                                     {% endif %}
-                                    {% if tester.profilepic %}
-                                    <td><img src="{{tester.profilepic.url}}" alt=""></td>
+                                    {% if tester.userauth.profilepic %}
+                                    <td><img src="{{tester.userauth.profilepic.url}}" alt=""></td>
                                     {% else %}
                                     <td><img src="{% static 'images/faces/avatar.jpeg' %}" alt="">
                                     </td>
                                     {% endif %}
-                                    <td>{{ tester.username }}</td>
-                                    <td>{{ tester.first_name }} {{ tester.last_name }}</td>
-                                    {% if tester.userloca_set.first.contact_number %}
-                                    <td>{{ tester.userloca_set.first.contact_number }}</td>
+                                    <td>{{ tester.userauth.first_name }} {{ tester.userauth.last_name }}</td>
+                                    <td>{{tester.maincategory.name}}>{{tester.subcategory.name}}</td>
+                                    {% if tester.userauth.userloca_set.first.contact_number %}
+                                    <td>{{ tester.userauth.userloca_set.first.contact_number }}</td>
                                     {% else %}
                                     <td style="color: red;">Contact Number Unavailable</td>
                                     {% endif %}
-                                    {% if tester.userloca_set.first.city %}
+                                    {% if tester.userauth.userloca_set.first.city %}
                                     <td>
-                                        {{ tester.userloca_set.first.country}}, {{tester.userloca_set.first.state}},
-                                        {{tester.userloca_set.first.city }}
+                                        {{ tester.userauth.userloca_set.first.country}}, {{tester.userauth.userloca_set.first.state}},
+                                        {{tester.userauth.userloca_set.first.city }}
                                     </td>
                                     {% else %}
                                     <td style="color: red;">Location Unavailable</td>
                                     {% endif %}
                                     <td class="pr-1" style="font-weight: 900;">
-                                        {% if tester.is_active %}
+                                        {% if tester.userauth.is_active and tester.userauth.testerdata.registered_tester %}
                                         <span style="color: azure;" class="badge bg-success">Active</span>
+                                        {% elif not tester.userauth.testerdata.registered_tester %}
+                                        <span style="color: azure;" class="badge bg-warning">Waiting</span>
                                         {% else %}
                                         <span style="color: red;" class="badge bg-dark">Suspended</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if tester.is_active %}
+                                        {% if tester.userauth.is_active %}
                                         <a href="" class="btn btn-inverse-warning btn-sm mb-2 ml-2">Suspend</a>
                                         <button class="btn btn-inverse-danger btn-sm mb-2 ml-2">Send<br>Termination
                                             Letter</button><br>
@@ -245,8 +247,8 @@
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-md-2">
-                                                    {% if tester.profilepic %}
-                                                    <img class="rounded float-start" src="{{tester.profilepic.url}}"
+                                                    {% if tester.userauth.profilepic %}
+                                                    <img class="rounded float-start" src="{{tester.userauth.profilepic.url}}"
                                                         style="width: 100%; height: 100%;" alt="">
                                                     {% else %}
                                                     <img class="rounded float-start"
@@ -256,14 +258,14 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p style="display: inline-block;"><strong>Tester Name:</strong>
-                                                        {{tester.first_name}} {{tester.last_name}}
+                                                        {{tester.userauth.first_name}} {{tester.userauth.last_name}}
                                                     </p><br>
                                                     <p style="display: inline-block;"><strong>Email:</strong>
-                                                        {{tester.email}}
+                                                        {{tester.userauth.email}}
                                                     </p><br>
-                                                    {% if tester.userloca_set.first.contact_number %}
+                                                    {% if tester.userauth.userloca_set.first.contact_number %}
                                                     <p style="display: inline-block;"><strong>Contact Number:</strong>
-                                                        {{tester.userloca_set.first.contact_number}}
+                                                        {{tester.userauth.userloca_set.first.contact_number}}
                                                     </p><br>
                                                     {% else %}
                                                     <p style="display: inline-block;"><strong>Contact Number:</strong>
@@ -271,19 +273,19 @@
                                                     </p><br>
                                                     {% endif %}
                                                     <p style="display: inline-block;"><strong>Signed In On:</strong>
-                                                        {{tester.date_joined}}
+                                                        {{tester.userauth.date_joined}}
                                                     </p><br>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    {% if tester.userloca_set.first.city %}
+                                                    {% if tester.userauth.userloca_set.first.city %}
                                                     <p style="display: inline-block;"><strong>Country:</strong>
-                                                        {{tester.userloca_set.first.country}}
+                                                        {{tester.userauth.userloca_set.first.country}}
                                                     </p><br>
                                                     <p style="display: inline-block;"><strong>State:</strong>
-                                                        {{tester.userloca_set.first.state}}
+                                                        {{tester.userauth.userloca_set.first.state}}
                                                     </p><br>
                                                     <p style="display: inline-block;"><strong>City:</strong>
-                                                        {{tester.userloca_set.first.city}}
+                                                        {{tester.userauth.userloca_set.first.city}}
                                                     </p><br>
                                                     {% else %}
                                                     <p style="display: inline-block;"><strong>Country:</strong> <span
@@ -294,10 +296,10 @@
                                                             style="color: red;">Unavailable</span></p><br>
                                                     {% endif %}
                                                     <p style="display: inline-block;"><strong>Last Login:</strong>
-                                                        {{tester.last_login}}
+                                                        {{tester.userauth.last_login}}
                                                     </p><br>
                                                     <p style="display: inline-block;"><strong>User Status:</strong>
-                                                        {% if tester.is_active %}
+                                                        {% if tester.userauth.is_active %}
                                                         <span style="color: azure;"
                                                             class="badge bg-success">Active</span>
                                                         {% else %}

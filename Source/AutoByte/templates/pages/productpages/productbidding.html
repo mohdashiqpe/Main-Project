@@ -1,5 +1,6 @@
 {% extends "../../base.html" %}
 {% load static %}
+{% load mathfilters %}
 {% block content %}
 <div class="row pt-4">
     <div class="col-lg-12 grid-margin stretch-card">
@@ -22,23 +23,30 @@
                         </thead>
                         <tbody>
                             {% if combined %}
-                            {% for j, i in combined %}
+                            {% for j in combined %}
                             <tr>
-                                <td><a href="{% url 'myproducts' %}">{{ j.name }}</a></td>
+                                <td><a href="{% url 'myproducts' %}">{{ j.name }}</td>
                                 <td class="font-weight-bold text-danger"><span id="tdbaseprice">{{ j.baseprice }}</span></td>
-                                {% if i.product_id != j.id %}
+                                <!-- This Set Gives Price -->
+                                {% if not j.highestBidder %}
                                 <td class="font-weight-bold text-danger"><span>No Bidding Yet</span>
-                                {% elif i.product.baseprice > i.bidding_price %}
-                                <td class="font-weight-bold text-danger"><span id="tdhighestbid">{{ i.bidding_price }}</span>
+                                {% elif i.product.baseprice > j.highestBidder.bidding_price %}
+                                <td class="font-weight-bold text-danger"><span id="tdhighestbid">{{ j.highestBidder.bidding_price }}</span>
                                 <i class="ti-arrow-down"></i></td>
                                 {% else %}
-                                <td class="font-weight-bold text-success"><span id="tdhighestbid">{{ i.bidding_price }}</span>
+                                <td class="font-weight-bold text-success"><span id="tdhighestbid">{{ j.highestBidder.bidding_price }}</span>
                                 <i class="ti-arrow-up"></i></td>
                                 {% endif %}
-                                {% if i.bidding_price %}
-                                <td style="font-weight: bolder; font-family: 'Courier New', Courier, monospace">{{ i.userauth.first_name }} {{ i.userauth.last_name }}</td>
-                                {% if i.is_final %}
-                                <td><p class="badge badge-warning">Sold to {{ i.userauth.first_name }} {{ i.userauth.last_name }} <br>
+                                <!-- End -->
+                                <!-- Gives Highest Bidder -->
+                                {% if j.highestBidder.bidding_price %}
+                                <td style="font-weight: bolder; font-family: 'Courier New', Courier, monospace">
+                                    <span><span style="font-weight: bolder;">Name:</span> {{ j.highestBidder.userauth.first_name }} {{ j.highestBidder.userauth.last_name }}</span><br>
+                                    <span><span style="font-weight: bolder;">Email:</span> {{j.highestBidder.userauth.email}}</span><br>
+                                    <span><span style="font-weight: bolder;">Contact No:</span> {{j.highestBidder.userauth.userloca_set.first.contact_number}}</span>
+                                </td>
+                                {% if j.highestBidder.is_final or finalbidder %}
+                                <td><p class="badge badge-warning">Sold to {{ j.highestBidder.userauth.first_name }} {{ j.highestBidder.userauth.last_name }} <br>
                                     {% if j.is_sold %}
                                     Purchased
                                     {% else %}
@@ -46,12 +54,53 @@
                                     {% endif %}
                                 </p></td>
                                 {% else %}
-                                <td><a href="{% url 'mannualbidder' j.id %}" class="btn btn-sm btn-inverse-danger">Sell for <span id="tdhighestbid">{{ i.bidding_price }}</span></a></td>
+                                <td>
+                                    <a href="{% url 'mannualbidder' j.id %}" class="btn btn-sm btn-inverse-danger">Sell for <span id="tdhighestbid">{{ j.highestBidder.bidding_price }}</span></a><br>
+                                    <button class="btn btn-sm btn-inverse-info mt-2" onclick="onClickingaccordiantd({{j.id}}, this)" id="ShowAllBids">Show All Bids</button>
+                                </td>
                                 {% endif %}
                                 {% else %}
                                 <td class="text-danger">Nobody Has Bidded Yet</td>
                                 <td><span class="badge badge-warning">Waiting upto <br> {{j.enddatetime}}</span></td>
                                 {% endif %}
+                            </tr>
+                            <tr class="d-none" id="accordiantd{{j.id}}">
+                                <td colspan="5" align="start">
+                                    <table >
+                                        <tr>
+                                            <th>Contact Info</th><th>Bid Amount</th><th>Action</th><th>Profit/Loss</th>
+                                        </tr>
+                                        <!-- j.biddingprice_set.highestBidder according to bidder.bidding_price -->
+                                        {% for bidder in j.biddingprice_set.all %}
+                                        <tr>
+                                            <td>
+                                                <span><span style="font-weight: bolder;">Name:</span> {{ bidder.userauth.first_name }} {{ bidder.userauth.last_name }}</span><br>
+                                                <span><span style="font-weight: bolder;">Email:</span> {{bidder.userauth.email}}</span><br>
+                                                <span><span style="font-weight: bolder;">Contact No:</span> {{bidder.userauth.userloca_set.first.contact_number}}</span>
+                                            </td>
+                                            <td id="tdbaseprice">{{bidder.bidding_price}}</td>
+                                            <td>
+                                                {% if bidder.bidding_price > j.baseprice %}
+                                                <a href="{% url 'mannualySelectedBidder' bidder.id %}" class="btn btn-sm btn-inverse-success">Sell for <span id="tdhighestbid">{{ bidder.bidding_price }}</span></a>
+                                                {% elif bidder.bidding_price < j.baseprice %}
+                                                <a href="{% url 'mannualySelectedBidder' bidder.id %}" class="btn btn-sm btn-inverse-danger">Sell for <span id="tdhighestbid">{{ bidder.bidding_price }}</span></a>
+                                                {% else %}
+                                                <a href="{% url 'mannualySelectedBidder' bidder.id %}" class="btn btn-sm btn-inverse-primary">Sell for <span id="tdhighestbid">{{ bidder.bidding_price }}</span></a>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if bidder.bidding_price > j.baseprice %}
+                                                Profit: <span class="font-weight-bold text-success" id="tdhighestbid">{{ bidder.bidding_price|sub:j.baseprice }}</span>
+                                                {% elif bidder.bidding_price < j.baseprice %}
+                                                Loss: <span class="font-weight-bold text-danger" id="tdhighestbid">{{ j.baseprice|sub:bidder.bidding_price }}</span>
+                                                {% else %}
+                                                Breakeven: <span class="font-weight-bold text-primary" id="tdhighestbid">{{ j.baseprice|sub:bidder.bidding_price }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                </td>
                             </tr>
                             {% endfor %}
                             {% else %}
@@ -99,6 +148,8 @@
                                 <td>{{ i.product.userauth.first_name }} {{ i.product.userauth.last_name }}</td>
                                 {% if i.is_final %}
                                 <td><a href="{% url 'checkoutview' i.product.id %}" class="btn btn-sm btn-inverse-danger">Buy for {{i.bidding_price}}</a></td>
+                                {% elif i.is_sold_to_others %}
+                                <td><span class="badge badge-warning">This item has been Sold <br> to Someone else</span></td>
                                 {% else %}
                                 <td><span class="badge badge-warning">Waiting</span></td>
                                 {% endif %}
@@ -128,6 +179,20 @@
         });
     });
 
+    function onClickingaccordiantd(id, button){
+        const accordiantd = document.getElementById("accordiantd"+id);
+        if (accordiantd.classList.contains("d-none")) {
+            accordiantd.classList.remove("d-none");
+            button.textContent = "Hide All Bids";
+            button.classList.remove("btn-inverse-info")
+            button.classList.add("btn-inverse-dark")
+        } else {
+            accordiantd.classList.add("d-none");
+            button.textContent = "Show All Bids";
+            button.classList.add("btn-inverse-info")
+            button.classList.remove("btn-inverse-dark")
+        }
+    }
 
     function formatMoney(amount) {
         var formattedIncome = new Intl.NumberFormat('en-IN', {

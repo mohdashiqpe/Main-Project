@@ -25,6 +25,20 @@
         {% if useratmanageproduct %}
         <!-- Include jQuery UI CSS -->
         {% endif %}
+        {% if userinindex %}
+        <style>
+            .cardImage {
+              height: 100%;
+              width: 100%;
+              object-fit: cover;
+            }
+      
+            .cardDetail {
+              display: inline-block;
+              margin-left: 5px;
+            }
+        </style>
+        {% endif %}
         {% if userinsettings %}
         <style>
             /* Define CSS styles for the clickable div */
@@ -320,18 +334,7 @@
         </style>
         {% endif %}
         {% if myorders %}
-        <style>
-            .gradient-custom {
-                /* fallback for old browsers */
-                background: #cd9cf2;
-
-                /* Chrome 10-25, Safari 5.1-6 */
-                background: -webkit-linear-gradient(to top left, rgba(205, 156, 242, 1), rgba(246, 243, 255, 1));
-
-                /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-                background: linear-gradient(to top left, rgb(202, 192, 209), rgba(246, 243, 255, 1))
-            }
-        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         {% endif %}
     </head>
 

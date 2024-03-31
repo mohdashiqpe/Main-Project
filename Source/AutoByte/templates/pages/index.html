@@ -4,19 +4,24 @@
 <div class="content-wrapper">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4" id="products-container">
         <!-- Loop Starts Here -->
+        <input type="hidden" name="" id="countp" value="{{products|length}}">
         {% for product in products %}
-        <div class="col mb-3" id="productdiv">
+        <input type="hidden" id="subcat" value="{{product.subcat.id}}">
+        <input type="hidden" id="brand" value="{{product.brand.id}}">
+        <input type="hidden" id="ratinghid{{forloop.counter}}" value="{{product.testerrating}}">
+        <div class="col mb-3" id="productdiv{{forloop.counter}}" data-index="{{forloop.counter}}">
             <div class="card" style="width: 18rem; margin-right: 8px;">
-                <a href="">
+                <a href="{% url 'productinfoview' product.id %}">
                     <div class="" style="height: 200px;">
                         <img src="{{ product.productimages_set.first.images.url }}" class="card-img-top img-fluid cardImage" alt="no image">
                     </div>
                 </a>
                 <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5> 
-                    <p class="font-weight-bold cardDetail">Brand: {{ product.brand.name }}</p>
+                    <p class="font-weight-bold cardDetail">Brand: <span id="brand{{forloop.counter}}">{{ product.brand.name }}</span></p>
                     <h6 class="cardDetail">Model: {{ product.YearOfMan|date:"Y" }} </h6>
                     <h6 class="cardDetail">
+                        <input type="hidden" name="" id="testerrating{{forloop.counter}}" value="{{product.testerrating}}">
                         QA Rating: 
                         {% if product.testerrating == 1 %} 
                         <i class="mdi mdi-star"></i>
