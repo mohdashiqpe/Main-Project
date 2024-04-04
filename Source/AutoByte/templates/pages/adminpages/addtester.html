@@ -1,0 +1,196 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Add Tester</h4>
+                    <form class="forms-sample" id="testerForm" action="{% url 'addtester' %}" method="post">
+                        {% csrf_token %}
+                        <p class="card-description">
+                            Personal info
+                        </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">First Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="firstnameinput" name="fname"
+                                            placeholder="First Name">
+                                        <div id="fnameErr" class=""></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Last Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="lastnameinput" name="lname"
+                                            placeholder="Last Name">
+                                        <div id="lnameErr" class=""></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Email</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="inputEmail" name="email"
+                                            placeholder="Email">
+                                        <div class="" id="emailError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            Tester Location Data
+                        </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Country</label>
+                                    <div class="col-sm-9">
+                                        <select name="" id="countrySelect" class="form-control"></select>
+                                        <div class="" id="countryError"></div>
+                                        <input type="hidden" name="country" id="selectedCountryText">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">State</label>
+                                    <div class="col-sm-9">
+                                        <select name="" id="stateSelect" class="form-control">
+                                            <option value='' selected disabled>Please Select your State</option>
+                                        </select>
+                                        <div class="" id="stateError"></div>
+                                        <input type="hidden" name="state" id="selectedStateText">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">City</label>
+                                    <div class="col-sm-9">
+                                        <select name="" id="citySelect" class="form-control">
+                                            <option value='' selected disabled>Please Select your City</option>
+                                        </select>
+                                        <div id="cityError"></div>
+                                        <input type="hidden" name="city" id="selectedCityText">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            Tester Job Data
+                        </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Main Category</label>
+                                    <div class="col-sm-9">
+                                        <select name="mc" id="categorySelect" class="form-control"
+                                            onload="loadCategory()" onchange="loadSubCategory()">
+                                        </select>
+                                        <div id="categorySelectError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Sub Category</label>
+                                    <div class="col-sm-9">
+                                        <select name="c" id="scategorySelect" class="form-control">
+                                        </select>
+                                        <div id="scategorySelectError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Annual Income</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group" id="incomegroup">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control" name="income" id="income"
+                                                placeholder="Annual Income">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">.00</span>
+                                            </div>
+                                        </div>
+                                        <div id="incomeerror"></div>
+                                        <h5 class="mt-3 mr-1" style="display: inline-block;">Alloted Income:
+                                        </h5>
+                                        <h4 class="badge badge-success" style="display: inline-block;"
+                                            id="incomeOutput">0</h4><br>
+                                        <h5 class="mr-1" style="display: inline-block;">Income Per Month:</h5>
+                                        <h4 class="badge badge-success" style="display: inline-block;"
+                                            id="incomeperdayOutput">0
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mr-2">Send Link</button>
+                        <a href="#" class="btn btn-light">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Tester's Table</h4>
+                    <p class="card-description">
+                        Status of<code>Tester's</code>
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Sl.No</th>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Category</th>
+                                    <th>Employee <br> Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if testers %}
+                                {% for tester in testers %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ tester.first_name }} {{ tester.last_name }}</td>
+                                    <td>{{ tester.userloca_set.first.country }}, {{ tester.userloca_set.first.state }}, {{ tester.userloca_set.first.city }}
+                                    </td>
+                                    <td>{{ tester.testerdata.maincategory.name }} > {{ tester.testerdata.subcategory.name }}
+                                    </td>
+                                    <td>
+                                        {% if tester.testerdata.registered_tester %}
+                                        <label class="badge badge-success">Activated</label>
+                                        {% else %}
+                                        <label class="badge badge-warning">Not Activated</label>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,174 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-12 grid-margin strech-card">
+            <h2 class="font-weight-bold">My Orders</h2>
+            {% for p in products %}
+            <div class="card shadow-0 border rounded-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                            <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                <img src="{{p.product.productimages_set.first.images.url}}" class="w-100">
+                                <a href="#!">
+                                    <div class="hover-overlay">
+                                        <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);">
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-xl-6">
+                            <h5>{{p.product.name}}</h5>
+                            <div class="d-flex flex-row">
+                                <div class="text-danger mb-1 me-2">
+                                    {% for _ in "x"|ljust:p.product.testerrating %}
+                                    <i class="fa fa-star"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="mt-1 mb-0 text-muted small">
+                                <span class="text-primary"> • </span>
+                                <span>{{p.product.subcat.name}}</span>
+                                <span class="text-primary"> • </span>
+                                <span>{{p.product.brand.name}}</span>
+                            </div>
+                            <p class="text-truncate mb-4 mb-md-0">
+                                {% if p.order_status %}
+                                Delivery Status: {{ p.order_status }}
+                                <br>
+                                <span style="color: red;">
+                                    Delivered By:{{ p.deliverychart.deliveryboy.user_auth.first_name }} {{ p.deliverychart.deliveryboy.user_auth.last_name }}
+                                </span><br>
+                                {% if p.deliverychart.deliveryboy %}
+                                <span style="color: red;">
+                                    Contact Number: 9861271818
+                                </span>
+                                {% endif %}
+                                {% else %}
+                                Delivery Status: Not Yet Dispatched
+                                {% endif %}
+                            </p>
+                            <div class="row d-flex align-items-center justify-content-center mt-4">
+                                <div class="col-md-2">
+                                  <p class="text-muted mb-0 small">Track Order</p>
+                                </div>
+                                <div class="col-md-10">
+                                  <div class="progress" style="height: 6px; border-radius: 16px;">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ p.deliverychart.progress_perc }}%; border-radius: 16px; background-color: #a8729a;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                  </div>
+                                  <div class="d-flex justify-content-between mb-1">
+                                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Item Dispatched</p>
+                                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for delivary</p>
+                                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+                                  </div>
+                                </div>
+                              </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                            <div class="d-flex flex-row align-items-center mb-1">
+                                <h4 class="mb-1 me-1" id="productprice"></h4>
+                            </div>
+                            <h6 class="text-danger">Bought For <span id="pamount">{{p.amount}}</span></h6>
+                            <button class="btn btn-sm btn-inverse-dark">Order Details</button>
+                            {% if not p.deliverychart.deliveryboy %}
+                            <br>
+                            <span style="font-weight: 800;">No Delivery Boy Assigned</span>
+                            {% else %}
+                            {% if not p.deliverychart.is_comleted  %}
+                            <button class="d-block btn btn-sm btn-inverse-info mt-3" onclick="openMap({{p.deliverychart.destination_loc.latitude}}, {{p.deliverychart.destination_loc.longitude}}, {{p.deliverychart.deliveryboy.current_lat}}, {{p.deliverychart.deliveryboy.current_lng}})">Delivery Tracking</button>
+                            {% else %}
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row d-none" id="mappanel">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card p-4">
+                <h4 class="card-title">Tracking Map</h4>
+                <div id="map" style="width: 100%; height:400px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const pamount = document.querySelectorAll('#pamount');
+        pamount.forEach((i) => {
+            i.textContent = formatMoney(i.textContent);
+        });
+    });
+
+    function formatMoney(amount) {
+        var formattedIncome = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR' // You can change the currency code as needed
+        }).format(Number(amount));
+        return formattedIncome;
+    }
+
+    var map;
+    function loadMapper() {
+        map = L.map('map').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    }
+    const map_panel = document.getElementById('mappanel');
+
+    function openMap(lat1, lng1, lat2, lng2) {
+        if (map_panel.classList.contains('d-none')) {
+            if (map) {
+                console.log("Ready And Loaded");
+            } else {
+                map_panel.classList.remove('d-none');
+            var source = L.latLng([lat1, lng1]);
+            var destination = L.latLng([lat2, lng2]);
+            console.log(`Source: ${source}, Destination: ${destination}`); 
+            loadMapper();   
+            findRoute(source, destination);   
+            }
+        } else {
+            map_panel.classList.add('d-none');
+        }
+    }
+
+    function findRoute(start, end) {
+        var start_marker = L.marker(start).addTo(map)
+                console.log(`Start Point ${start.lat}, ${start.lng}`);
+                console.log(`End Point ${end.lat}, ${end.lng}`);
+                L.Routing.control({
+                waypoints: [
+                    L.latLng(start.lat, start.lng),
+                    L.latLng(end.lat, end.lng)
+                ],
+                routeWhileDragging: true
+                }).on('routesfound', (e) => {
+                    console.log(e);
+                    
+                    console.log(typeof(e.routes[0].summary.totalTime));
+                    e.routes[0].coordinates.forEach(function (coord, index) {
+                        setTimeout(() => {
+                            start_marker.setLatLng([coord.lat, coord.lng]);
+                        }, 10000*index);
+                    });
+                })
+                .addTo(map);
+            }
+</script>
+{% endblock %}
+<!-- <div class="progress" style="height: 6px; border-radius: 16px;">
+    <div class="progress-bar" role="progressbar"
+        style="width: 65%; border-radius: 16px; background-color: #a8729a;"
+        aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+</div> -->

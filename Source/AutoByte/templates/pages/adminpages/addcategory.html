@@ -1,0 +1,164 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Add Category</h4>
+                    <p class="card-description">
+                        Section To Add Product Category
+                    </p>
+                    <form class="forms-sample" action="" method="post"
+                        id="addCategoryForm1">
+                        {% csrf_token %}
+                        {% if mainCat %}
+                        <div class="form-group mb-1">
+                            <div class="switch-field mb-0">
+                                <input type="radio" id="radio-one" name="switch-one" value="mc"
+                                    checked />
+                                <label for="radio-one">Main Category</label>
+                                <input type="radio" id="radio-two" name="switch-one" value="c" />
+                                <label for="radio-two">Sub Category</label>
+                                {% if mainCat.first.subcategory_set.count %}
+                                <input type="radio" id="radio-three" name="switch-one" value="sc" />
+                                <label for="radio-three">Sub Category</label>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="form-group" id="mainCategorySelectDiv" style="display: none;">
+                            <label for="username">Select the Main Category</label>
+                            <select class="form-control" name="mcatid" id="categorySelect"
+                                onchange="loadSubCategory()">
+                            </select>
+                            <div id="categorySelectError"></div>
+                        </div>
+                        <div class="form-group" id="categorySelectDiv" style="display: none;">
+                            <label for="username">Select the Sub Category</label>
+                            <select class="form-control" name="catid" id="scategorySelect">
+                                <option value='' selected disabled>Select Your Sub Category</option>
+                            </select>
+                            <div id="scategorySelectError" class=""></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="username" id="ctlabel">Main Category</label>
+                            <input type="text" class="form-control" id="category" name="mainCat"
+                                placeholder="Main Category">
+                            <div id="categoryError" class=""></div>
+                        </div>
+                        <button type="submit" class="btn btn-inverse-success mr-2">Add
+                            Category</button>
+                        <button type="reset" class="btn btn-light">Clear</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Category Table</h4>
+                    <p class="card-description">
+                        Category List
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>ID</th>
+                                    <th>Categories Count</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if mainCat %}
+                                {% for cat in mainCat %}
+                                <tr>
+                                    <td>{{cat.name}}</td>
+                                    <td>M-CAT{{cat.id}}</td>
+                                    <td>{{ cat.subcategory_set.count }}</td>
+                                    <td>
+                                        {% if cat.subcategory_set.count > 0 %}
+                                        <button class="btn btn-info btn-sm accordion-button" id="btn1"
+                                            onclick="toggleAccordion('subCat{{cat.id}}')">View
+                                            Sub</button>
+                                        {% else %}
+                                        <a href=""
+                                            class="btn btn-sm btn-inverse-danger">Remove</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr id="subCat{{cat.id}}" class="accordion-content"
+                                    style="display: none;">
+                                    <td colspan="5" style="background-color: #5d646c;">
+                                        <table class="table table-dark">
+                                            <thead>
+                                                <th>Category ID</th>
+                                                <th>Name</th>
+                                                <th>Action</th>
+                                            </thead>
+                                            <tbody>
+                                                {% for dog in cat.subcategory_set.all %}
+                                                <tr>
+                                                    <td>S-CAT{{dog.id}}</td>
+                                                    <td>{{dog.name}}</td>
+                                                    <td>
+                                                        {% if dog.brand_set.count > 0 %}
+                                                        <button
+                                                            class="btn btn-info btn-sm accordion-button"
+                                                            onclick="toggleAccordion('subSubCat{{dog.id}}')">Toggle
+                                                            Sub</button>
+                                                        {% else %}
+                                                        <a href=""
+                                                            class="btn btn-sm btn-inverse-danger">Remove</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr id="subSubCat{{dog.id}}"
+                                                    class="accordion-content"
+                                                    style="display: none;">
+                                                    <td colspan="5" style="background-color: #333;">
+                                                        <table class="table">
+                                                            <thead style="color: aliceblue;">
+                                                                <tr>
+                                                                    <th>Sub ID</th>
+                                                                    <th>Name</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                
+                                                                {% for s in dog.brand_set.all %}
+                                                                <tr style="color: aliceblue;">
+                                                                    <td>{{s.id}}</td>
+                                                                    <td>{{s.name}}</td>
+                                                                    <td>
+                                                                        <a href=""
+                                                                            class="btn btn-sm btn-inverse-danger">Remove</a>
+                                                                    </td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
