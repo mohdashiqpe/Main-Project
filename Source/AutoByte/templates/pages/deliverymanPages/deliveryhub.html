@@ -1,0 +1,172 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Delivery Request</h4>
+                    <div class="table-responsive pt-3">
+                        <table class="table table-dark">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        #
+                                    </th>
+                                    <th>
+                                        Seller Name
+                                    </th>
+                                    <th>
+                                        Seller Location
+                                    </th>
+                                    <th>
+                                        Buyer Name
+                                    </th>
+                                    <th>
+                                        Buyer Location
+                                    </th>
+                                    <th style="text-align: center;">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if orders %}
+                                {% for order in orders %}
+                                <tr>
+                                    <td>
+                                        1
+                                    </td>
+                                    <td>
+                                        {{ order.order.product.userauth.first_name }}
+                                        {{ order.order.product.userauth.last_name }}
+                                    </td>
+                                    <td>
+                                        {{ order.source_loc.city }}
+                                    </td>
+                                    <td>
+                                        {{ order.order.buyer.first_name }} {{ order.order.buyer.last_name }}
+                                    </td>
+                                    <td>
+                                        {{ order.destination_loc.city }}
+                                    </td>
+                                    <td>
+                                        {% if order.is_comleted %}
+                                        <span class="badge badge-sm badge-success">Delivery Completed</span>
+                                        {% else %}
+                                        <input type="hidden" id="srclat" value="{{ order.source_loc.latitude }}" />
+                                        <input type="hidden" id="srclng" value="{{ order.source_loc.longitude }}" />
+                                        {% if not order.deliveryboy %}
+                                        <a href="{% url 'delivery_accepted' order.id %}"
+                                            class="btn btn-sm btn-inverse-success">Accept</a>
+                                        <a href="{% url 'delivery_rejected' order.id %}"
+                                            class="btn btn-sm btn-inverse-danger">Reject</a>
+                                        {% else %}
+                                        {% if order.progress_perc == 50 %}
+                                        <input type="hidden" id="destLat" value="{{order.destination_loc.latitude}}">
+                                        <input type="hidden" id="destLng" value="{{order.destination_loc.longitude}}">
+                                        {% if request.session.otp1 %}
+                                        <form action="{% url 'validate_otp1' order.id %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="text" name="otp" class="form-control form-control-sm"
+                                                placeholder="Enter the OTP"><br>
+                                            {% for message in messages %}
+                                            <div class="badge badge-sm badge-danger">{{ message }}</div><br>
+                                            {% endfor %}
+                                            <input type="submit" class="btn btn-sm btn-inverse-info" value="Submit">
+                                        </form>
+                                        {% else %}
+                                        <a href="{% url 'gen_otp1' order.id %}"
+                                            class="btn btn-sm btn-inverse-success">Generate OTP</a>
+                                        {% endif %}
+                                        {% else %}
+                                        {% if request.session.otp %}
+                                        <form action="{% url 'validate_otp' order.id %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="text" name="otp" class="form-control form-control-sm"
+                                                placeholder="Enter the OTP"><br>
+                                            {% for message in messages %}
+                                            <div class="badge badge-sm badge-danger">{{ message }}</div><br>
+                                            {% endfor %}
+                                            <input type="submit" class="btn btn-sm btn-inverse-info" value="Submit">
+                                        </form>
+                                        {% else %}
+                                        <a href="{% url 'gen_otp' order.id %}"
+                                            class="btn btn-sm btn-inverse-success">Generate OTP</a>
+                                        <button class="btn btn-sm btn-inverse-warning"
+                                            onclick="getRoute({{forloop.counter}})">Get Route</button>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td align="center">No orders found.</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="dellat" value="{{ request.user.deliveryboy.current_lat }}" />
+    <input type="hidden" id="dellng" value="{{ request.user.deliveryboy.current_lng }}">
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card p-4">
+                <h4 class="card-title">Map</h4>
+                <div id="map" style="width: 100%; height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card p-4">
+                <h4 class="card-title"></h4>
+                <div class="table-responsive pt-3">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    First name
+                                </th>
+                                <th>
+                                    Amount
+                                </th>
+                                <th>
+                                    Deadline
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    1
+                                </td>
+                                <td>
+                                    Herman Beck
+                                </td>
+                                <td>
+                                    $ 77.99
+                                </td>
+                                <td>
+                                    May 15, 2015
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

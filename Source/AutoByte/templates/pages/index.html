@@ -1,0 +1,109 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4" id="products-container">
+        <!-- Loop Starts Here -->
+        <input type="hidden" name="" id="countp" value="{{products|length}}">
+        {% for product in products %}
+        <input type="hidden" id="subcat" value="{{product.subcat.id}}">
+        <input type="hidden" id="brand" value="{{product.brand.id}}">
+        <input type="hidden" id="ratinghid{{forloop.counter}}" value="{{product.testerrating}}">
+        <div class="col mb-3" id="productdiv{{forloop.counter}}" data-index="{{forloop.counter}}">
+            <div class="card" style="width: 18rem; margin-right: 8px;">
+                <a href="{% url 'productinfoview' product.id %}">
+                    <div class="" style="height: 200px;">
+                        <img src="{{ product.productimages_set.first.images.url }}" class="card-img-top img-fluid cardImage" alt="no image">
+                    </div>
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5> 
+                    <p class="font-weight-bold cardDetail">Brand: <span id="brand{{forloop.counter}}">{{ product.brand.name }}</span></p>
+                    <h6 class="cardDetail">Model: {{ product.YearOfMan|date:"Y" }} </h6>
+                    <h6 class="cardDetail">
+                        <input type="hidden" name="" id="testerrating{{forloop.counter}}" value="{{product.testerrating}}">
+                        QA Rating: 
+                        {% if product.testerrating == 1 %} 
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        {% elif product.testerrating == 2 %} 
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        {% elif product.testerrating == 3 %}
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        {% elif product.testerrating == 4 %}
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star-outline"></i>
+                        {% else %} 
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        <i class="mdi mdi-star"></i>
+                        {% endif %}
+                    </h6>
+                    <!-- <p class="font-weight-bold cardDetail" id="productPrice{{forloop.counter}}" onload="formatMoney({{forloop.counter}})">{{product.baseprice}}</p> -->
+                    <div class="p-1" style="display: flex; justify-content: space-around;">
+                        <button type="button" class="btn btn-inverse-danger" data-toggle="modal" data-target="#exampleModalCenter{{product.id}}">
+                            Bid
+                        </button>
+                        <!-- <a href="" class="btn btn-inverse-danger">Bid</a> -->
+                        <a href="" class="btn btn-inverse-warning"><i class="mdi mdi-cart-plus"></i></a>
+                        <a href="{% url 'productinfoview' product.id %}" class="btn btn-inverse-info">More</a>
+                    </div>
+                    <!-- Button trigger modal -->
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter{{product.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-top" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Bid For {{product.name}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body d-flex justify-content-center">
+                                <div class="card" style="width: 18rem;">
+                                    <img class="card-img-top" src="{{product.productimages_set.first.images.url}}" alt="Card image cap">
+                                    <div class="card-body">
+                                      <a href="{% url 'productinfoview' product.id %}" data-toggle="tooltip" title="Show More"><h5 class="card-title">{{product.name}}</h5></a>
+                                      <p class="text-dark">Rating By Tester:{{product.testerrating}}<i class="mdi mdi-star"></i></p>
+                                      <div class="input-group" id="inputgrp{{forloop.counter}}">
+                                        <input type="text" name="price" id="inputprice{{forloop.counter}}" oninput="inputToMoney('{{forloop.counter}}')" class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="Bidding Amount">
+                                        <div class="input-group-append">
+                                          <!-- <span class="input-group-text">&#8377;</span> -->
+                                          <span class="input-group-text" id="displaymoney{{forloop.counter}}">0.00</span>
+                                        </div>
+                                      </div> 
+                                      <div id="priceerror{{forloop.counter}}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Send Request</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <!-- Loop Ends Here -->
+    </div>
+</div>
+{% endblock %}

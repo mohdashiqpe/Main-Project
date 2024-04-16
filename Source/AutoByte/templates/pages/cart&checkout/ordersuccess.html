@@ -1,0 +1,163 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="text-left logo p-2 px-5">
+                    <img src="{% static 'images/logo-mini.svg' %}" width="50">
+                </div>
+                <div class="invoice p-5">
+                    <h5>Your order Confirmed!</h5>
+                    <span class="font-weight-bold d-block mt-4">Congrats, {{user.first_name}} {{user.last_name}}</span>
+                    <span>You order has been confirmed and will be shipped in next two days!</span>
+                    <div class="payment border-top mt-3 mb-3 border-bottom table-responsive">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="py-2">
+                                            <span class="d-block text-muted">Order Date</span>
+                                            <span>{{order.orderdatetime}}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="py-2">
+                                            <span class="d-block text-muted">Order No</span>
+                                            <span>order_{{order.id}}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="py-2">
+                                            <span class="d-block text-muted">Payment</span>
+                                            <span><img src="https://img.icons8.com/color/48/000000/mastercard.png"
+                                                    width="20" /></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="py-2">
+                                            <span class="d-block text-muted">Shiping Address</span>
+                                            <span>{{order.userloca.country}}, {{order.userloca.state}}, {{order.userloca.city}}<br> {{order.userloca.street}} <br> {{order.userloca.address}} </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="product border-bottom table-responsive">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td width="20%">
+                                        <img src="{{order.product.productimages_set.first.images.url}}" width="90">
+                                    </td>
+                                    <td width="60%">
+                                        <span class="font-weight-bold">{{order.product.name}}</span>
+                                        <div class="product-qty">
+                                            <span class="d-block">Quantity:1</span>
+                                            <span>Color:Dark</span>
+                                        </div>
+                                    </td>
+                                    <td width="20%">
+                                        <div class="text-right">
+                                            <span class="font-weight-bold" id="subtotal">{{order.amount}}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row d-flex justify-content-end">
+                        <div class="col-md-5">
+                            <table class="table table-borderless">
+                                <tbody class="totals">
+                                    <tr>
+                                        <td>
+                                            <div class="text-left">
+                                                <span class="text-muted">Subtotal</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-right">
+                                                <span id="subtotal">{{order.amount}}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="text-left">
+                                                <span class="text-muted">Shipping Fee</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-right">
+                                                <span id="subtotal">30</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-top border-bottom">
+                                        <td>
+                                            <div class="text-left">
+                                                <span class="font-weight-bold">Subtotal</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-right">
+                                                <span class="font-weight-bold" id="subtotal">{{netamount}}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <p>We will be sending shipping confirmation email when the item shipped successfully!</p>
+                    <p class="font-weight-bold mb-0">Thanks for shopping with us!</p>
+                    <span>Team AutoByte</span> <br>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'myorders' %}" class="mt-2 btn btn-link">Show My Orders</a>
+                        <a href="{% url 'home' %}" class="mt-2 btn btn-sm btn-inverse-success">Back to Home</a>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between footer p-3">
+                    <span id="todayid">12 June, 2020</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        getTodayDate();
+        document.getElementById('subtotal').textContent = formatMoney(document.getElementById('subtotal').textContent);
+    });
+
+    function formatMoney(amount) {
+        var formattedIncome = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR' // You can change the currency code as needed
+        }).format(Number(amount));
+        return formattedIncome;
+    }
+
+    function getTodayDate(){
+        // Create a new Date object
+        var today = new Date();
+
+        var monthNames = ["January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"];
+
+        // Get the current date, month, and year
+        var day = today.getDate();
+        var month = today.getMonth() + 1; // JavaScript months are zero-based
+        var year = today.getFullYear();
+
+        var monthName = monthNames[month];
+
+        // Format the date as needed (e.g., MM/DD/YYYY) 12 June, 2020
+        var formattedDate = day +' '+ monthName + ', '+ year;
+        document.getElementById('todayid').textContent = formattedDate;
+    }
+</script>
+{% endblock %}

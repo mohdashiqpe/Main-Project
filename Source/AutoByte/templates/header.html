@@ -1,0 +1,366 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Skydash Admin</title>
+        <!-- plugins:css -->
+        <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+        <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+        <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+        <!-- endinject -->
+        <!-- Plugin css for this page -->
+        <link rel="stylesheet" href="{% static 'vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+        <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'js/select.dataTables.min.css' %}">
+        <!-- End plugin css for this page -->
+        <!-- inject:css -->
+        <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+        <!-- endinject -->
+        <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+        {% if user_in_deliveryhub %}
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        {% endif %}
+        {% if useratmanageproduct %}
+        <!-- Include jQuery UI CSS -->
+        {% endif %}
+        {% if userinindex %}
+        <style>
+            .cardImage {
+              height: 100%;
+              width: 100%;
+              object-fit: cover;
+            }
+      
+            .cardDetail {
+              display: inline-block;
+              margin-left: 5px;
+            }
+        </style>
+        {% endif %}
+        {% if useratautheror %}
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        {% endif %}
+        {% if addDeliveryHub %}
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        {% endif %}
+        {% if userinsettings %}
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        <style>
+            /* Define CSS styles for the clickable div */
+            .clickable-address {
+                /* Other styles for the div */
+                width: 200px;
+                height: 100px;
+                background-color: #f0f0f0;
+                /* Set cursor to pointer when hovering */
+                cursor: pointer;
+            }
+        </style>
+        {% endif %}
+        {% if myproducts %}
+        <style>
+            @media (max-width: 767.98px) {
+                .border-sm-start-none {
+                    border-left: none !important;
+                }
+            }
+        </style>
+        {% endif %}
+        {% if productdetials %}
+        <style>
+            /*****************globals*************/
+            body {
+                font-family: 'open sans';
+                overflow-x: hidden;
+            }
+
+            img {
+                max-width: 100%;
+            }
+
+            .preview {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+
+            @media screen and (max-width: 996px) {
+                .preview {
+                    margin-bottom: 20px;
+                }
+            }
+
+            .tab-pane img.fit-inside {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .preview-pic {
+                -webkit-box-flex: 1;
+                -webkit-flex-grow: 1;
+                -ms-flex-positive: 1;
+                flex-grow: 1;
+            }
+
+            .preview-thumbnail.nav-tabs {
+                border: none;
+                margin-top: 15px;
+            }
+
+            .preview-thumbnail.nav-tabs li {
+                width: 18%;
+                margin-right: 2.5%;
+            }
+
+            .preview-thumbnail.nav-tabs li img {
+                max-width: 100%;
+                display: block;
+            }
+
+            .preview-thumbnail.nav-tabs li a {
+                padding: 0;
+                margin: 0;
+            }
+
+            .preview-thumbnail.nav-tabs li:last-of-type {
+                margin-right: 0;
+            }
+
+            .tab-content {
+                overflow: hidden;
+            }
+
+            .tab-content img {
+                width: 100%;
+                -webkit-animation-name: opacity;
+                animation-name: opacity;
+                -webkit-animation-duration: .3s;
+                animation-duration: .3s;
+            }
+
+            .card {
+                margin-top: 50px;
+                background: #eee;
+                padding: 3em;
+                line-height: 1.5em;
+            }
+
+            @media screen and (min-width: 997px) {
+                .wrapper {
+                    display: -webkit-box;
+                    display: -webkit-flex;
+                    display: -ms-flexbox;
+                    display: flex;
+                }
+            }
+
+            .details {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+
+            .colors {
+                -webkit-box-flex: 1;
+                -webkit-flex-grow: 1;
+                -ms-flex-positive: 1;
+                flex-grow: 1;
+            }
+
+            .product-title,
+            .price,
+            .sizes,
+            .colors {
+                text-transform: UPPERCASE;
+                font-weight: bold;
+            }
+
+            .checked,
+            .price span {
+                color: #ff9f1a;
+            }
+
+            .product-title,
+            .rating,
+            .product-description,
+            .price,
+            .vote,
+            .sizes {
+                margin-bottom: 15px;
+            }
+
+            .product-title {
+                margin-top: 0;
+            }
+
+            .size {
+                margin-right: 10px;
+            }
+
+            .size:first-of-type {
+                margin-left: 40px;
+            }
+
+            .color {
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 10px;
+                height: 2em;
+                width: 2em;
+                border-radius: 2px;
+            }
+
+            .color:first-of-type {
+                margin-left: 20px;
+            }
+
+            .add-to-cart,
+            .like {
+                background: #ff9f1a;
+                padding: 1.2em 1.5em;
+                border: none;
+                text-transform: UPPERCASE;
+                font-weight: bold;
+                color: #fff;
+                -webkit-transition: background .3s ease;
+                transition: background .3s ease;
+            }
+
+            .add-to-cart:hover,
+            .like:hover {
+                background: #b36800;
+                color: #fff;
+            }
+
+            .not-available {
+                text-align: center;
+                line-height: 2em;
+            }
+
+            .not-available:before {
+                font-family: fontawesome;
+                content: "\f00d";
+                color: #fff;
+            }
+
+            .orange {
+                background: #ff9f1a;
+            }
+
+            .green {
+                background: #85ad00;
+            }
+
+            .blue {
+                background: #0076ad;
+            }
+
+            .tooltip-inner {
+                padding: 1.3em;
+            }
+
+            @-webkit-keyframes opacity {
+                0% {
+                    opacity: 0;
+                    -webkit-transform: scale(3);
+                    transform: scale(3);
+                }
+
+                100% {
+                    opacity: 1;
+                    -webkit-transform: scale(1);
+                    transform: scale(1);
+                }
+            }
+
+            @keyframes opacity {
+                0% {
+                    opacity: 0;
+                    -webkit-transform: scale(3);
+                    transform: scale(3);
+                }
+
+                100% {
+                    opacity: 1;
+                    -webkit-transform: scale(1);
+                    transform: scale(1);
+                }
+            }
+
+            /*# sourceMappingURL=style.css.map */
+        </style>
+        {% endif %}
+        {% if atSuccessPage %}
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+            body {
+                background-color: #c3c1dc;
+                font-family: 'Montserrat', sans-serif
+            }
+
+            .card {
+                border: none
+            }
+
+            .logo {
+                background-color: rgb(225, 219, 219)
+            }
+
+            .totals tr td {
+                font-size: 13px
+            }
+
+            .footer {
+                background-color: #eeeeeea8
+            }
+
+            .footer span {
+                font-size: 12px
+            }
+
+            .product-qty span {
+                font-size: 12px;
+                color: #dedbdb
+            }
+        </style>
+        {% endif %}
+        {% if myorders %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        {% endif %}
+    </head>
+
+    {% if request.user.UserRole == 1 or request.user.UserRole == 3 or request.user.UserRole == 4 %}
+
+    <body class="sidebar-dark">
+        {% else %}
+
+        <body>
+            {% endif %}
+            <div class="container-scroller">
+                <!-- partial:partials/_navbar.html -->
+                {% include "navbar.html" %}

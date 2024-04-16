@@ -1,0 +1,295 @@
+{% extends "../../base.html" %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Add Your Products</h4>
+                    <p class="card-description">Section to add Products</p>
+                    <form action="{% url 'addProductForm' %}" method="post" class="forms-sample"
+                        enctype="multipart/form-data" id="addProForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label pr-0">Main Category</label>
+                                    <div class="col-md-9 justify-content-center">
+                                        {% if corresponding_data %}
+                                        <input type="hidden" id="mcat" value="{{ corresponding_data.0.Category }}">
+                                        {% endif %}
+                                        <select name="category" id="categorySelect" class="form-control"
+                                            onload="loadCategory()" onchange="loadSubCategory()">
+                                            <option value="" selected disabled>Select the Category
+                                            </option>
+                                        </select>
+                                        <div id="categoryError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" id="catDiv">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label pr-0">Sub Category</label>
+                                    <div class="col-md-9 justify-content-center">
+                                        {% if corresponding_data %}
+                                        <input type="hidden" id="sub" value="{{ corresponding_data.0.Sub }}">
+                                        {% endif %}
+                                        <select name="scategory" id="scategorySelect" class="form-control"
+                                            onchange="loadBrand()">
+                                            <option value="">Select Your Sub-Category</option>
+                                        </select>
+                                        <div id="CatSelErr"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" id="subDiv">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label pr-0">Brand</label>
+                                    <div class="col-md-9 justify-content-center">
+                                        {% if corresponding_data %}
+                                        <input type="hidden" id="bra" value="{{ corresponding_data.0.Brand }}">
+                                        {% endif %}
+                                        <select name="subcategory" id="subCatSel" class="form-control">
+                                            <option value="">Select Your Brand</option>
+                                        </select>
+                                        <div id="subCatSelErr"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label pr-0">Product Name</label>
+                                    <div class="col-md-9 align-items-center">
+                                        <input type="text" class="form-control" name="pname" id="pname" {% if corresponding_data %} value="{{ corresponding_data.0.Name }}" {% endif %}>
+                                        <div id="pnameError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label pr-0">Expected
+                                        Price</label>
+                                    <div class="col-md-9 align-items-center">
+                                        <div class="form-group">
+                                            <div class="input-group" id="amountInputSet">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="amountDisp">&#8377;0.00</span>
+                                                </div>
+                                                <input type="text" name="expPrice" class="form-control" id="amount"
+                                                    aria-label="Amount (to the nearest dollar)" value="{{ corresponding_data.0.Price }}" {% if corresponding_data %} onload="validateAmount()" {% endif %}>
+                                            </div>
+                                            <div id="amountError"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Bidding Type</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="membershipRadios"
+                                                    id="membershipRadios1" value="1" checked>Automated
+                                                <i class="input-helper"></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="membershipRadios"
+                                                    id="membershipRadios2" value="2">
+                                                Mannualy Select Bid
+                                                <i class="input-helper"></i></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" id="biddingdiv">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label pr-0">Auto Bidding Time</label>
+                                    <div class="col-md-9 justify-content-center">
+                                        <input type="datetime-local" id="datetime" name="enddatetime" class="form-control">
+                                        <div id="errorEndDate"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label pr-0">Accident Remark (if
+                                        Any)</label>
+                                    <div class="col-md-9 align-items-center">
+                                        <textarea rows="4" class="form-control" name="accremark" id=""></textarea>
+                                        <div id="pnameError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-3 col-form-label pr-0">Description
+                                        On Product</label>
+                                    <div class="col-md-9 align-items-center">
+                                        <textarea name="description" id="description" class="form-control"
+                                            placeholder="Description"></textarea>
+                                        <div id="descError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-3 col-form-label pr-0">Date of
+                                        Manufacture</label>
+                                    <div class="col-md-9 align-items-center">
+                                        <input type="date" name="date" id="dateInput" class="form-control"
+                                            placeholder="" onclick="setMaxDate()">
+                                        <div id="dateError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-3 col-form-label pr-0">Product Location</label>
+                                    <div class="col-md-9 align-items-center">
+                                        <select name="productLoca" id="productLocaSelect" class="form-control"
+                                            onload="loadLocation()">
+                                            <option value="">Select Product Location</option>
+                                        </select>
+                                        <div id="productLocaError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Add Additional Addons and Details input field -->
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label pr-0">Image upload</label>
+                                    <div class="col-md-9">
+                                        <input type="file" name="img[]" id="productImage" class="file-upload-default"
+                                            multiple>
+                                        <div class="input-group col-xs-12">
+                                            <input type="text" class="form-control file-upload-info" disabled=""
+                                                placeholder="Upload Image">
+                                            <span class="input-group-append">
+                                                <button class="file-upload-browse btn btn-primary"
+                                                    type="button">Upload</button>
+                                            </span>
+                                        </div>
+                                        <div id="productImageError"></div>
+                                        <p>Require Minimum 4 Photo's 4 Sides of Product</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div id="imagePreview" class=""></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <button type="submit" class="btn btn-inverse-danger btn-lg">Add Product</button>
+                            
+                            <button type="button" class="btn btn-inverse-primary ml-3" data-toggle="modal" data-target="#exampleModal">Make Prediction</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'make_prediction' %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Product Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="file" class="form-control" name="image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Predict</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">My Products</h4>
+                    <p class="card-description"><code>Red For Un-Listed</code>and Green For Listed
+                    </p>
+                    <div class="table-responsive pt-3">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Sl. No
+                                    </th>
+                                    <th>
+                                        ID
+                                    </th>
+                                    <th>
+                                        Category
+                                    </th>
+                                    <th>
+                                        Product
+                                    </th>
+                                    <th>Tester Allocated</th>
+                                    <th>
+                                        Base Price
+                                    </th>
+                                    <th>Approval</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if userprod %}
+                                {% for product in userprod %}
+                                {% if product.tester_id is None %}
+                                <tr class="table-danger">
+                                    {% else %}
+                                <tr class="table-success">
+                                    {% endif %}
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ product.id }}</td>
+                                    <td>{{ product.maincat.name }} >
+                                        {{ product.subcat.name }} >
+                                        {{ product.brand.name }}
+                                    </td>
+                                    <td>{{product.name}}</td>
+                                    <td>
+                                        {% if product.tester_id is None %}
+                                        Not Allocated Yet
+                                        {% else %}
+                                        {{ product.tester_id }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{product.baseprice}}</td>
+                                    <td>
+                                        {% if product.is_tested %}
+                                        <span class="badge badge-success">Approved</span>
+                                        {% else %}
+                                        <span class="badge badge-danger">Not Approved</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr class="table-warning">
+                                    <td colspan="7" align="center">No Products To Approved Off</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
