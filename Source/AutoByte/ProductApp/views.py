@@ -162,22 +162,26 @@ def product_bidding_view(request):
         else:
             item.highestBidder = ownedProductBids.order_by('-bidding_price').first()
 
-    print(biddedProducts)
-
     mybidds = request.user.biddingprice_set.all()
 
     finalised_bids = set(
         BiddingPrice.objects.filter(is_final=True).values_list('product_id', flat=True)
     )
 
+    print(f'Finalised Bids :{finalised_bids}')
     for bid in mybidds:
         bid.is_sold_to_others = bid.product_id in finalised_bids
+    
+    for i in finalised_bids:
+        print(i)
 
+    print(f'Current User: {request.user}')
     context = {
         'bidding': True,
         'combined': ownedProducts, 
         'bids': mybidds,
     }
+    print(f'End Bids :{mybidds}')
     return render(request, "pages/productpages/productbidding.html", context)
 
 import pandas as pd

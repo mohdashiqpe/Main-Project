@@ -147,7 +147,11 @@
                                 </td>
                                 <td>{{ i.product.userauth.first_name }} {{ i.product.userauth.last_name }}</td>
                                 {% if i.is_final %}
+                                {% if i.product.sold_to == request.user %}
+                                <td><span class="badge badge-success">Product Purchased</span></td>
+                                {% else %}
                                 <td><a href="{% url 'checkoutview' i.product.id %}" class="btn btn-sm btn-inverse-danger">Buy for {{i.bidding_price}}</a></td>
+                                {% endif %}
                                 {% elif i.is_sold_to_others %}
                                 <td><span class="badge badge-warning">This item has been Sold <br> to Someone else</span></td>
                                 {% else %}

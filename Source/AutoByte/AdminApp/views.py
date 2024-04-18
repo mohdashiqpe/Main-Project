@@ -76,6 +76,7 @@ def addtesterview(request):
         return render(request, "pages/adminpages/addtester.html", context)
 
 def addcategoryview(request):
+    SubCategory.objects.filter(name="TVs").delete()
     context = {
         "inaddcategory": True,
         "mainCat": MainCategory.objects.all()

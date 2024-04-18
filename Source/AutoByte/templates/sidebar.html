@@ -21,7 +21,8 @@
                     <div class="collapse" id="ui-basic">
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item"> <a class="nav-link" href="{% url 'addtester' %}">Add Tester</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'addUnitAutheror' %}">Add Unit Autheror</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="{% url 'addUnitAutheror' %}">Add Unit
+                                    Autheror</a></li>
                             <li class="nav-item"> <a class="nav-link" href="#">Manage T & A</a></li>
                         </ul>
                     </div>
@@ -35,12 +36,15 @@
                     </a>
                     <div class="collapse" id="form-elements">
                         <ul class="nav flex-column sub-menu">
-                            <li class="nav-item {% if inaddcategory %}active{% endif %}"><a class="nav-link" href="{% url 'addCategory' %}">Add Category</a>
+                            <li class="nav-item {% if inaddcategory %}active{% endif %}"><a class="nav-link"
+                                    href="{% url 'addCategory' %}">Add Category</a>
                             </li>
                             <!-- <li class="nav-item"><a class="nav-link" href=""><del>Review Products</del></a>
                             </li> -->
-                            <li class="nav-item"><a class="nav-link" href="{% url 'manageproduct' %}">Manage Product</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'deliveryMan' %}" >Delivery Managment</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'manageproduct' %}">Manage Product</a>
+                            </li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'deliveryMan' %}">Delivery
+                                    Managment</a></li>
                         </ul>
                     </div>
                 </li>
@@ -127,134 +131,122 @@
             <div class="filter-content py-3" id="filterdiv">
             </div>
         </article> -->
-        <article class="card-group-item p-0">
-            <header class="card-header p-1 d-flex align-items-center justify-content-center">
-                <h6 class="title mt-1">Category</h6> 
-            </header>
-            <div class="filter-content p-0">
-                <div class="card-body p-1">
-                    <form>
-                        <select name="" id="filtercat" class="form-check form-control" onchange="loadBrands()">
-                            <option value="">All Category</option>
+
+        <form action="{% url 'home' %}" method="post">
+            {% csrf_token %}
+            <article class="card-group-item p-0">
+                <header class="card-header p-1 d-flex align-items-center justify-content-center">
+                    <h6 class="title mt-1">Category</h6>
+                </header>
+                <div class="filter-content p-0">
+                    <input type="hidden" id="selectedcat" value="{{category}}">
+                    <div class="card-body p-1">
+                        <select name="category" id="filtercat" class="form-check form-control" onchange="loadBrands()">
+                            <option value="all">All Category</option>
                         </select>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </article>
-        <article class="card-group-item p-0">
-            <header class="card-header p-1 d-flex align-items-center justify-content-center">
-                <h6 class="title mt-1">Brand</h6>
-            </header>
-            <div class="filter-content p-0">
-                <div class="card-body p-1">
-                    <form>
-                        <select name="" id="filterbrand" class="form-check form-control">
+            </article>
+            <article class="card-group-item p-0">
+                <header class="card-header p-1 d-flex align-items-center justify-content-center">
+                    <h6 class="title mt-1">Brand</h6>
+                </header>
+                <div class="filter-content p-0">
+                    <input type="hidden" id="selectedbrand" value="{{brand}}">
+                    <div class="card-body p-1">
+                        <select name="brand" id="filterbrand" class="form-check form-control">
+                            <option value="all">All Brand</option>
                         </select>
-                    </form>
+                    </div>
+                </div>
+            </article>
+            <article class="card-group-item">
+                <header class="card-header p-1 d-flex align-items-center justify-content-center">
+                    <h6 class="title">QA Rating</h6>
+                </header>
+                <div class="filter-content">
+                    <div class="card-body">
+                        <div class="custom-control custom-checkbox">
+                            <span class="float-right badge badge-light round">52</span>
+                            <input type="checkbox" name="rating1" class="custom-control-input" id="rating1" value="1" {% if '1' in checks %} checked {% endif %}>
+                            <label class="custom-control-label" for="rating1">
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                            </label>
+                        </div> <!-- form-check.// -->
+
+                        <div class="custom-control custom-checkbox">
+                            <span class="float-right badge badge-light round">132</span>
+                            <input type="checkbox" name="rating2" class="custom-control-input" id="rating2" value="2" {% if '2' in checks %} checked {% endif %}>
+                            <label class="custom-control-label" for="rating2">
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                            </label>
+                        </div> <!-- form-check.// -->
+
+                        <div class="custom-control custom-checkbox">
+                            <span class="float-right badge badge-light round">17</span>
+                            <input type="checkbox" name="rating3" class="custom-control-input" id="rating3" value="3" {% if '3' in checks %} checked {% endif %}>
+                            <label class="custom-control-label" for="rating3">
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                            </label>
+                        </div> <!-- form-check.// -->
+
+                        <div class="custom-control custom-checkbox">
+                            <span class="float-right badge badge-light round">7</span>
+                            <input type="checkbox" name="rating4" class="custom-control-input" id="rating4" value="4" {% if '4' in checks %} checked {% endif %}>
+                            <label class="custom-control-label" for="rating4">
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star-outline"></i>
+                            </label>
+                        </div> <!-- form-check.// -->
+
+                        <div class="custom-control custom-checkbox">
+                            <span class="float-right badge badge-light round">7</span>
+                            <input type="checkbox" name="rating5" class="custom-control-input" id="rating5" value="5" {% if '5' in checks %} checked {% endif %}>
+                            <label class="custom-control-label" for="rating5">
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                                <i class="mdi mdi-star"></i>
+                            </label>
+                        </div>
+                    </div> <!-- card-body.// -->
+                </div>
+            </article>
+            <article class="pb-1">
+                <div class="filter-content">
+                    <div class="card-body p-1 d-flex align-items-center justify-content-center">
+                        <input type="submit" class="btn btn-sm btn-inverse-dark" style="width: 100vw;"
+                            value="Apply Filters">
+                    </div>
+                </div>
+            </article>
+        </form>
+        {% if checks or category or brand %}
+        <article class="pb-1">
+            <div class="filter-content">
+                <div class="card-body p-1 d-flex align-items-center justify-content-center">
+                    <a href="{% url 'home' %}" class="btn btn-sm btn-inverse-warning" style="width: 100vw;" >Clear X</a>
                 </div>
             </div>
         </article>
-        <article class="card-group-item">
-            <header class="card-header p-1 d-flex align-items-center justify-content-center">
-                <h6 class="title">Pricing Range</h6>
-            </header>
-            <div class="filter-content">
-                <div class="card-body">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="Check1" value="50">
-                        <label class="custom-control-label" for="Check1">0 - 50,000</label>
-                    </div>
+        {% endif %}
 
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="Check2" value="150">
-                        <label class="custom-control-label" for="Check2">50,001 - 1,50,000</label>
-                    </div> 
-
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="Check3" value="250">
-                        <label class="custom-control-label" for="Check3">1,50,001 - 2,50,000</label>
-                    </div> 
-
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="Check4" value="500">
-                        <label class="custom-control-label" for="Check4">2,50,000 - 5,00,000</label>
-                    </div> 
-
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="Check5" value="501">
-                        <label class="custom-control-label" for="Check5">5,00,001 & Above</label>
-                    </div>
-                </div>
-            </div>
-        </article>
-        <article class="card-group-item">
-            <header class="card-header p-1 d-flex align-items-center justify-content-center">
-                <h6 class="title">QA Rating</h6>
-            </header>
-            <div class="filter-content">
-                <div class="card-body">
-                    <div class="custom-control custom-checkbox">
-                        <span class="float-right badge badge-light round">52</span>
-                        <input type="checkbox" class="custom-control-input" id="rating1" value="1">
-                        <label class="custom-control-label" for="rating1">
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                        </label>
-                    </div> <!-- form-check.// -->
-
-                    <div class="custom-control custom-checkbox">
-                        <span class="float-right badge badge-light round">132</span>
-                        <input type="checkbox" class="custom-control-input" id="rating2" value="2">
-                        <label class="custom-control-label" for="rating2">
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                        </label>
-                    </div> <!-- form-check.// -->
-
-                    <div class="custom-control custom-checkbox">
-                        <span class="float-right badge badge-light round">17</span>
-                        <input type="checkbox" class="custom-control-input" id="rating3" value="3">
-                        <label class="custom-control-label" for="rating3">
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                        </label>
-                    </div> <!-- form-check.// -->
-
-                    <div class="custom-control custom-checkbox">
-                        <span class="float-right badge badge-light round">7</span>
-                        <input type="checkbox" class="custom-control-input" id="rating4" value="4">
-                        <label class="custom-control-label" for="rating4">
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star-outline"></i>
-                        </label>
-                    </div> <!-- form-check.// -->
-
-                    <div class="custom-control custom-checkbox">
-                        <span class="float-right badge badge-light round">7</span>
-                        <input type="checkbox" class="custom-control-input" id="rating5" value="5">
-                        <label class="custom-control-label" for="rating5">
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                            <i class="mdi mdi-star"></i>
-                        </label>
-                    </div>
-                </div> <!-- card-body.// -->
-            </div>
-        </article>
         {% else %}
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav ml-0 mt-0 ">

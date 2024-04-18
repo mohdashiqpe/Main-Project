@@ -1,12 +1,19 @@
 {% extends "../../base.html" %}
 {% load static %}
-{% block content %}
+{% block content %} 
 <div class="content-wrapper">
     <div class="row justify-content-center">
         <div class="col-12 grid-margin strech-card">
             <div class="row" style="display: flex; justify-content: space-between;">
                 <div class="col-4"><h2 class="font-weight-bold">My Orders</h2></div>
-                <div class="col-4"><h2 class="font-weight-bold">User Filters</h2></div>
+                <div class="col-4">
+                    <form action="{% url 'myorders' %}" method="post">
+                        {% csrf_token %}
+                        <input type="date" name="filterdate">
+                        <input type="submit" class="btn btn-sm btn-inverse-dark" value="Get">
+                    </form>
+                    <a href="{% url 'generate_filtered_orders_pdf' %}?date={{selectedDate}}" class="btn btn-sm btn-inverse-info">Download as PDF</a>
+                </div>
             </div>
             {% for p in products %}
             <div class="card shadow-0 border rounded-3 mb-1">

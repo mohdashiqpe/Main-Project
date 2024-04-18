@@ -660,7 +660,7 @@ function validateIncome(){
 
 var hiddenBrand = document.getElementById('bra');
 function loadBrand(){
-  subCatSel.innerHTML = "<option value='' selected disabled>Select Your Category</option>";
+  subCatSel.innerHTML = "<option value='all' selected disabled>Select Your Category</option>";
   const subcategory = scategorySelect.value;
   const subcategory_int = parseInt(subcategory);
   console.log(subcategory_int);

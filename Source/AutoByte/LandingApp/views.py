@@ -22,9 +22,11 @@ def homePage(request):
     context = {
         "userinindex": True,
         "products": products,
-        "filters": SubCategory.objects.all()
+        "filters": SubCategory.objects.all(),
+        "category": '',
+        "brand": '',
+        "checks": ''
     }
-    
     if request.user.is_authenticated:
         if request.user.UserRole == 1:
             return redirect('adminView')
@@ -36,6 +38,28 @@ def homePage(request):
             context['products'] = products.exclude(userauth_id=request.user.email)
         elif request.user.UserRole == 4:
             return redirect('deliveryhubindex')
+        
+    if request.method == 'POST':
+        category = request.POST['category']
+        brand = request.POST['brand']
+        selected_checkboxes = []
+        for key, value in request.POST.items():
+            if key.startswith('rating'):
+                selected_checkboxes.append(value)
+
+        print(f"POST Category: {category}, {brand}")
+        print(f"Checks :{selected_checkboxes}")
+        if selected_checkboxes:
+            products = products.filter(testerrating__in=selected_checkboxes)
+            context['checks'] = selected_checkboxes
+        if category != 'all':
+            products = products.filter(subcat_id=category)
+            context['category'] = category
+        if brand != 'all':
+            products = products.filter(brand_id=brand)
+            context['brand'] = brand
+
+        context['products'] = products
             
     return render(request, "pages/index.html", context)
 
@@ -259,4 +283,3 @@ def saveGeoLoca(request):
         location.save()
         return redirect('userSettings')
     return HttpResponse('No GET Methods Available')
-

@@ -9,10 +9,14 @@ from django.db.models import Q
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
 import razorpay
-from datetime import datetime
+from datetime import datetime, timedelta
 import schedule
 from django.utils import timezone
 from DeliveryApp.models import *
+
+from django.template.loader import get_template
+from .models import Orders
+from xhtml2pdf import pisa
 
 # Create your views here.
 def checkoutview(request, product_id):
@@ -113,10 +117,18 @@ def successPage(request):
     return render(request, "pages/cart&checkout/ordersuccess.html", context)
 
 def myOrders_view(request): 
+    user_orders = Orders.objects.filter(buyer=request.user)
     context = {
         "myorders": True,
-        "products": Orders.objects.filter(buyer=request.user)
+        "products": user_orders,
+        "selectedDate": False 
     }
+    if request.method == 'POST':
+        filterdate = request.POST['filterdate']
+        if len(filterdate) != 0:
+            filter_datetime = datetime.strptime(filterdate, '%Y-%m-%d').date()
+            context['products'] = user_orders.filter(orderdatetime__date=filter_datetime)
+            context['selectedDate'] = filter_datetime
     return render(request, "pages/cart&checkout/myorders.html", context)
 
 
@@ -178,3 +190,39 @@ def create_delivery_chart(order):
     delivery_chart.destination_loc = delivery_loca1
     delivery_chart.order = order
     delivery_chart.save()
+
+def generate_filtered_orders_pdf(request):
+    dateFilter = request.GET['date']
+    if dateFilter == "False":
+        filtered_orders = Orders.objects.filter(buyer=request.user)
+        print(f"Given Date: {dateFilter}")
+    else:
+        # Parse the date string into a datetime object
+        filter_date = datetime.strptime(dateFilter, '%B %d, %Y')
+        print(filter_date)
+        # Format the datetime object into the "YYYY-MM-DD" format
+        formatted_date = filter_date.strftime('%Y-%m-%d')
+        # filter_date = datetime.strptime(date_string, '%B %d, %Y')
+        filtered_orders = Orders.objects.filter(Q(buyer=request.user) & Q(orderdatetime__date=formatted_date))
+    # Filter orders based on your criteria
+
+    # Create a context dictionary with the filtered orders
+    context = {
+        'filtered_orders': filtered_orders,
+    }
+    print(filtered_orders)
+    # Get the custom HTML template for the filtered orders
+    template = get_template('pdf_print.html')
+    
+    # Render the template with the context data
+    html_content = template.render(context)
+
+    # Create a PDF response
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="filtered_orders.pdf"'
+
+    # Generate PDF from HTML content
+    pisa.CreatePDF(html_content, dest=response)
+
+    return response
+
