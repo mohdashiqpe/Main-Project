@@ -1,5 +1,6 @@
 from email.utils import formataddr
 from django.http import JsonResponse
+from django.core.serializers import serialize
 from django.shortcuts import render, redirect, HttpResponse
 from django.core.mail import send_mail
 from AutoByte.settings import EMAIL_HOST_USER
@@ -8,19 +9,25 @@ from TesterApp.models import TesterData, TesterServices
 from LandingApp.models import UserAuth, UserLoca
 from ExtraFunctions import *
 from ProductApp.models import *
-from django.db.models import Q
+from CartApp.models import *
+from DeliveryApp.models import *
+from django.db.models import Q, Count, Sum
 
 def adminView(request):
     context = {
         "inadminview": True,
-        "usersdata": UserAuth.objects.filter(UserRole=2),
-        "testerdata": TesterData.objects.all(),
+        "usersCount": UserAuth.objects.filter(UserRole=2).count(),
+        "ordersCount": Orders.objects.all().count(),
+        "ordersworth": Orders.objects.aggregate(total_amount=Sum('amount'))['total_amount'] or 0,
+        "testersCount": UserAuth.objects.filter(UserRole=3).count(),
+        "testerserv": TesterServices.objects.all().count(),
+        "deliverycount": UserAuth.objects.filter(UserRole=4).count(),
+        "deliveryserv": DeliveryChart.objects.all().count(),
     }
-    if request.user.is_authenticated:
-        if request.user.UserRole != 1:
-            return redirect('home')
-    elif not request.user.is_authenticated:
+    if not request.user.is_authenticated:
         return redirect('login')
+    if not request.user.UserRole == 1:
+        return redirect('home')
     return render(request, "pages/adminpages/adminindex.html", context)
 
 def addtesterview(request):
@@ -226,3 +233,57 @@ def deliveryMan_view(request):
         "userInSalesPage": True,
     }
     return render(request, "pages/salesPages/salesData.html", context)
+
+def manageTA_view(request):
+    context = {
+        "userinTA": True,
+        "usersdata": UserAuth.objects.filter(UserRole=2),
+        "testerdata": TesterData.objects.all(),
+        "deliverdata": UserAuth.objects.filter(UserRole=4)
+    }
+    if request.user.is_authenticated:
+        if request.user.UserRole != 1:
+            return redirect('home')
+    elif not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, "pages/adminpages/manageTA.html", context)
+
+
+def fetchChartData(request):
+    onCategory = SubCategory.objects.annotate(product_count=Count('product'))
+    
+    # Create a list to store data for each SubCategory
+    data = []
+    
+    # Iterate over each SubCategory
+    for category in onCategory:
+        # Create a dictionary to store data for the current SubCategory
+        category_data = {
+            'id': category.id,
+            'name': category.name,
+            'product_count': category.product_count
+        }
+        data.append(category_data)  # Add the dictionary to the list
+    
+    # Serialize the data and return JSON response
+    return JsonResponse(data, safe=False)
+
+
+def fetchChartData_view(request):
+    onCategory = Brand.objects.annotate(product_count=Count('product'))
+    
+    # Create a list to store data for each SubCategory
+    data = []
+    
+    # Iterate over each SubCategory
+    for category in onCategory:
+        # Create a dictionary to store data for the current SubCategory
+        category_data = {
+            'id': category.id,
+            'name': category.name,
+            'product_count': category.product_count
+        }
+        data.append(category_data)  # Add the dictionary to the list
+    
+    # Serialize the data and return JSON response
+    return JsonResponse(data, safe=False)

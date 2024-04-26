@@ -1,3 +1,79 @@
+window.onload = dataCollection;
+var doughnutPieData;
+var pieChart;
+
+function dataCollection() {
+  console.log('Reached');
+  fetch('/chartData/')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json(); // Assuming the response is JSON
+  })
+  .then(data => {
+    var listlabels = [];
+    var listData = [];
+    console.log(data);
+    data.forEach( (e) => {
+      console.log(`Product Name (Label) = ${e.name} and Count = ${e.product_count}`);
+      listlabels.push(e.name);
+      listData.push(e.product_count);
+    });
+    console.log(listlabels);
+    console.log(listData);
+    console.log(`Loading Data into Chart !!!!!`);
+    pieChart.data.datasets[0].data = listData;
+    pieChart.data.labels = listlabels;
+    pieChart.update(); 
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+  });
+}
+
+function dataCollection2() {
+  console.log('Reached');
+  fetch('/chartDataBrand/')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json(); // Assuming the response is JSON
+  })
+  .then(data => {
+    var listlabels = [];
+    var listData = [];
+    console.log(data);
+    data.forEach( (e) => {
+      console.log(`Product Name (Label) = ${e.name} and Count = ${e.product_count}`);
+      listlabels.push(e.name);
+      listData.push(e.product_count);
+    });
+    console.log(listlabels);
+    console.log(listData);
+    console.log(`Loading Data into Chart !!!!!`);
+    pieChart.data.datasets[0].data = listData;
+    pieChart.data.labels = listlabels;
+    pieChart.update(); 
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+  });
+}
+
+function btnClick(btn) {
+  if (btn.textContent == "Brand Wise Pie Chart") {
+    btn.textContent = "Category Wise Pie Chart";
+    document.getElementById('titleOfPie').textContent = "Brand Chart";
+    dataCollection2();
+  } else {
+    document.getElementById('titleOfPie').textContent = "Category Chart";
+    btn.textContent = "Brand Wise Pie Chart";
+    dataCollection();
+  }
+}
+
 $(function() {
   /* ChartJS
    * -------
@@ -10,20 +86,38 @@ $(function() {
       label: '# of Votes',
       data: [10, 19, 3, 5, 2, 3],
       backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)'
+        'rgba(255, 99, 71, 0.2)',   // Red
+        'rgba(0, 191, 255, 0.2)',   // Deep Sky Blue
+        'rgba(255, 215, 0, 0.2)',   // Gold
+        'rgba(60, 179, 113, 0.2)',  // Medium Sea Green
+        'rgba(255, 105, 180, 0.2)', // Hot Pink
+        'rgba(255, 140, 0, 0.2)',   // Dark Orange
+        'rgba(0, 206, 209, 0.2)',   // Dark Turquoise
+        'rgba(218, 112, 214, 0.2)', // Orchid
+        'rgba(135, 206, 235, 0.2)', // Sky Blue
+        'rgba(255, 20, 147, 0.2)',  // Deep Pink
+        'rgba(0, 250, 154, 0.2)',   // Medium Spring Green
+        'rgba(255, 165, 0, 0.2)',   // Orange
+        'rgba(0, 255, 255, 0.2)',   // Cyan
+        'rgba(255, 0, 255, 0.2)',   // Magenta
+        'rgba(255, 255, 0, 0.2)',   // Yellow
       ],
       borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
+        'rgba(255, 99, 71, 1)',    // Red
+        'rgba(0, 191, 255, 1)',    // Deep Sky Blue
+        'rgba(255, 215, 0, 1)',    // Gold
+        'rgba(60, 179, 113, 1)',   // Medium Sea Green
+        'rgba(255, 105, 180, 1)',  // Hot Pink
+        'rgba(255, 140, 0, 1)',    // Dark Orange
+        'rgba(0, 206, 209, 1)',    // Dark Turquoise
+        'rgba(218, 112, 214, 1)',  // Orchid
+        'rgba(135, 206, 235, 1)',  // Sky Blue
+        'rgba(255, 20, 147, 1)',   // Deep Pink
+        'rgba(0, 250, 154, 1)',    // Medium Spring Green
+        'rgba(255, 165, 0, 1)',    // Orange
+        'rgba(0, 255, 255, 1)',    // Cyan
+        'rgba(255, 0, 255, 1)',    // Magenta
+        'rgba(255, 255, 0, 1)'     // Yellow
       ],
       borderWidth: 1,
       fill: false
@@ -78,34 +172,56 @@ $(function() {
     }
 
   };
-  var doughnutPieData = {
+
+  doughnutPieData = {
     datasets: [{
-      data: [30, 40, 30],
+      data: [40, 10, 5, 5, 40],
       backgroundColor: [
-        'rgba(255, 99, 132, 0.5)',
-        'rgba(54, 162, 235, 0.5)',
-        'rgba(255, 206, 86, 0.5)',
-        'rgba(75, 192, 192, 0.5)',
-        'rgba(153, 102, 255, 0.5)',
-        'rgba(255, 159, 64, 0.5)'
+        'rgba(255, 99, 132, 0.2)',   // Red
+        'rgba(54, 162, 235, 0.2)',   // Blue
+        'rgba(255, 206, 86, 0.2)',   // Yellow
+        'rgba(75, 192, 192, 0.2)',   // Cyan
+        'rgba(153, 102, 255, 0.2)',  // Purple
+        'rgba(255, 159, 64, 0.2)',   // Orange
+        'rgba(51, 204, 51, 0.2)',    // Green
+        'rgba(102, 102, 102, 0.2)',  // Gray
+        'rgba(255, 0, 255, 0.2)',    // Magenta
+        'rgba(0, 255, 255, 0.2)',    // Aqua
+        'rgba(255, 255, 0, 0.2)',    // Lime
+        'rgba(0, 0, 0, 0.2)',        // Black
+        'rgba(255, 192, 203, 0.2)',  // Pink
+        'rgba(0, 128, 0, 0.2)',      // Dark green
+        'rgba(255, 215, 0, 0.2)'     // Gold
       ],
       borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
+        'rgba(255, 99, 132, 1)',    // Red
+        'rgba(54, 162, 235, 1)',    // Blue
+        'rgba(255, 206, 86, 1)',    // Yellow
+        'rgba(75, 192, 192, 1)',    // Cyan
+        'rgba(153, 102, 255, 1)',   // Purple
+        'rgba(255, 159, 64, 1)',    // Orange
+        'rgba(51, 204, 51, 1)',     // Green
+        'rgba(102, 102, 102, 1)',   // Gray
+        'rgba(255, 0, 255, 1)',     // Magenta
+        'rgba(0, 255, 255, 1)',     // Aqua
+        'rgba(255, 255, 0, 1)',     // Lime
+        'rgba(0, 0, 0, 1)',         // Black
+        'rgba(255, 192, 203, 1)',   // Pink
+        'rgba(0, 128, 0, 1)',       // Dark green
+        'rgba(255, 215, 0, 1)'      // Gold
       ],
     }],
 
     // These labels appear in the legend and in the tooltips when hovering different arcs
     labels: [
-      'Pink',
-      'Blue',
-      'Yellow',
+      'Laptops',
+      'Cameras',
+      `TV's`,
+      `Console's`,
+      `Ashiqs`
     ]
   };
+
   var doughnutPieOptions = {
     responsive: true,
     animation: {
@@ -316,7 +432,7 @@ $(function() {
 
   if ($("#pieChart").length) {
     var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
-    var pieChart = new Chart(pieChartCanvas, {
+    pieChart = new Chart(pieChartCanvas, {
       type: 'pie',
       data: doughnutPieData,
       options: doughnutPieOptions

@@ -16,4 +16,7 @@ urlpatterns = [
     path('identify_available_dates/', identify_available_dates, name='identify_available_dates'),
     path('allocateTester/', allocateTester, name='allocateTester'),
     path('deliveryMan/', deliveryMan_view, name="deliveryMan"),
+    path('manageTA/', manageTA_view, name='manageTA'), # chartDataBrand
+    path('chartData/', fetchChartData, name='chartData'),
+    path('chartDataBrand/', fetchChartData_view, name='chartDataBrand'),
 ]

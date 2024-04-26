@@ -11,7 +11,7 @@
                         <span class="menu-title">Admin Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-item {% if ataddtesterview %}active{% endif %}">
+                <li class="nav-item {% if ataddtesterview or userinTA %}active{% endif %}">
                     <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
                         aria-controls="ui-basic">
                         <i class="icon-head menu-icon"></i>
@@ -23,7 +23,7 @@
                             <li class="nav-item"> <a class="nav-link" href="{% url 'addtester' %}">Add Tester</a></li>
                             <li class="nav-item"> <a class="nav-link" href="{% url 'addUnitAutheror' %}">Add Unit
                                     Autheror</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="#">Manage T & A</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="{% url 'manageTA' %}">Manage T & A</a></li>
                         </ul>
                     </div>
                 </li>
