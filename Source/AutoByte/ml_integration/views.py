@@ -102,12 +102,16 @@ def create_model(input_shape, num_classes):
     model = tf.keras.Sequential([
         tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape),
         tf.keras.layers.MaxPooling2D((2, 2)),
+
         tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
         tf.keras.layers.MaxPooling2D((2, 2)),
+
         tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
         tf.keras.layers.MaxPooling2D((2, 2)),
+
         tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
         tf.keras.layers.MaxPooling2D((2, 2)),
+
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(512, activation='relu'),
         tf.keras.layers.Dense(num_classes, activation='softmax')
@@ -116,13 +120,10 @@ def create_model(input_shape, num_classes):
 
 # Train and evaluate the model
 def train_model():
-    # Get training data from the database
     images, labels = get_training_data_from_db()
 
-    # Split the data into training and validation sets
     X_train, X_val, y_train, y_val = train_test_split(images, labels, test_size=0.2, random_state=42)
 
-    # Create and compile the model
     input_shape = X_train[0].shape
     num_classes = len(np.unique(labels))
     model = create_model(input_shape, num_classes)
@@ -130,20 +131,15 @@ def train_model():
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
-    # Train the model
     history = model.fit(X_train, y_train, epochs=10, validation_data=(X_val, y_val))
 
-    # Evaluate the model
     test_loss, test_acc = model.evaluate(X_val, y_val)
     print('Test accuracy:', test_acc)
     print('Test Loss: ', test_loss)
 
-    # Save the trained model
     model.save('trained_model_proj.h5')
 
-    # Save training history for future reference
     np.save('training_history.npy', history.history)
 
-# Call the train_model function to start training
 if __name__ == "__main__":
     train_model()

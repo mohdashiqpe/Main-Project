@@ -25,7 +25,8 @@ def homePage(request):
         "filters": SubCategory.objects.all(),
         "category": '',
         "brand": '',
-        "checks": ''
+        "checks": '',
+        "search": ''
     }
     if request.user.is_authenticated:
         if request.user.UserRole == 1:
@@ -40,24 +41,34 @@ def homePage(request):
             return redirect('deliveryhubindex')
         
     if request.method == 'POST':
-        category = request.POST['category']
-        brand = request.POST['brand']
-        selected_checkboxes = []
-        for key, value in request.POST.items():
-            if key.startswith('rating'):
-                selected_checkboxes.append(value)
+        if 'search_input' in request.POST:
+            products = products.filter(
+                Q(name__icontains=request.POST['search_input']) |
+                Q(description__icontains=request.POST['search_input']) |
+                Q(brand__name__icontains=request.POST['search_input']) |
+                Q(subcat__name__icontains=request.POST['search_input'])
+            )
+            context['search'] = request.POST['search_input']
+            print(f"Context['Search']: {context['search']}")
+        elif 'category' in request.POST:
+            category = request.POST['category']
+            brand = request.POST['brand']
+            selected_checkboxes = []
+            for key, value in request.POST.items():
+                if key.startswith('rating'):
+                    selected_checkboxes.append(value)
 
-        print(f"POST Category: {category}, {brand}")
-        print(f"Checks :{selected_checkboxes}")
-        if selected_checkboxes:
-            products = products.filter(testerrating__in=selected_checkboxes)
-            context['checks'] = selected_checkboxes
-        if category != 'all':
-            products = products.filter(subcat_id=category)
-            context['category'] = category
-        if brand != 'all':
-            products = products.filter(brand_id=brand)
-            context['brand'] = brand
+            print(f"POST Category: {category}, {brand}")
+            print(f"Checks :{selected_checkboxes}")
+            if selected_checkboxes:
+                products = products.filter(testerrating__in=selected_checkboxes)
+                context['checks'] = selected_checkboxes
+            if category != 'all':
+                products = products.filter(subcat_id=category)
+                context['category'] = category
+            if brand != 'all':
+                products = products.filter(brand_id=brand)
+                context['brand'] = brand
 
         context['products'] = products
             

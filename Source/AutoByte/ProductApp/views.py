@@ -86,7 +86,9 @@ def addProductForm(request):
     if biddingtype == '1':
         product.autobidding = True
         endBidTime_string = request.POST['enddatetime']
+        strategy_selected = request.POST['startegy']
         endBidTime_object = datetime.strptime(endBidTime_string, '%Y-%m-%dT%H:%M')
+        product.auto_sell_type = strategy_selected
         product.enddatetime = endBidTime_object
     else:
         product.autobidding = False

@@ -35,6 +35,7 @@ class Product(models.Model):
     sold_at_datetime = models.DateTimeField(null=True)
     # Product TrainData
     itemTrained = models.BooleanField(default=False)
+    auto_sell_type = models.IntegerField(default=0) # 0 for Not Auto Bidding / 1 for lossvalue_sell / 2 for lossvalue_exit
 
 class BiddingPrice(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)

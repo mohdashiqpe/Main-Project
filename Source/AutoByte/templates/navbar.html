@@ -11,19 +11,25 @@
                 alt="logo" /></a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        {% if userinindex %}
         <ul class="navbar-nav mr-lg-2">
             <li class="nav-item nav-search d-none d-lg-block">
+                <form action="{% url 'home' %}" method="post">
+                    {% csrf_token %}
                 <div class="input-group">
                     <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
                         <span class="input-group-text" id="search">
                             <i class="icon-search"></i>
                         </span>
                     </div>
-                    <input type="text" class="form-control" id="navbar-search-input" placeholder="Search now"
-                        aria-label="search" aria-describedby="search">
+                    <input type="text" name="search_input" class="form-control" id="navbar-search-input" placeholder="Search now"
+                        aria-label="search" aria-describedby="search" value="{{search}}">
+                        <input type="submit" style="align-self: center; justify-self: center;" class="btn btn-sm btn-inverse-danger" value="Search">
                 </div>
+                </form>
             </li>
         </ul>
+        {% endif %}
         <ul class="navbar-nav navbar-nav-right">
             {% if request.user.is_authenticated %}
             {% if request.user.UserRole != 1 and request.user.UserRole != 3 and request.user.UserRole != 4 and not userinaddproduct and not atSuccessPage %}

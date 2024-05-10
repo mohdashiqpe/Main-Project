@@ -10,6 +10,7 @@ addProForm.addEventListener('submit', function (event) {
     var b8 = validateProductLoca();
     var b9 = validateImage();
     var b10 = validateEndDate();
+    var b11 = strategy_Validation();
     var allBool = b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8 && b9 && b10;
     // if (stockDiv.style.display !== "none"){
     //     var b10 = validateStock();
@@ -27,7 +28,7 @@ addProForm.addEventListener('submit', function (event) {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    setDateTime();
+    // setDateTime();
     membershipRadios1.addEventListener('change', openEndBidDate);
     membershipRadios2.addEventListener('change', openEndBidDate);
     loadLocation();
@@ -281,8 +282,11 @@ function validateProductLoca(){
 function openEndBidDate() {
     if (membershipRadios1.checked){
         biddingdiv.classList.remove('d-none');
+        biddingdiv1.classList.remove('d-none');
     }else if (membershipRadios2.checked){
         biddingdiv.classList.add('d-none');
+        biddingdiv1.classList.add('d-none');
+
         console.log("Mannual");
     }
 }
@@ -311,4 +315,24 @@ function validateEndDate() {
     document.getElementById('datetime').classList.add('is-valid');
     document.getElementById('errorEndDate').textContent = "Good";
     return true;
+}
+
+function strategy_Validation() {
+    var strategys_sel = document.getElementById("strategys");
+    var strategys_sel_value = parseInt(strategys_sel.value.trim());
+    console.log(strategys_sel_value);
+    
+    var errorDiv = document.getElementById("errorEndDate");
+    errorStrategy.textContent="";
+    errorStrategy.classList.remove('invalid-feedback');
+    strategys_sel.classList.remove('is-invalid');
+    
+    if (strategys_sel_value === 0) {
+        errorStrategy.textContent = "Please select your exit strategy."; 
+        errorStrategy.classList.add('invalid-feedback');
+        strategys_sel.classList.add('is-invalid');
+        return false; 
+    }
+    
+    return true; 
 }

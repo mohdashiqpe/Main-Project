@@ -75,6 +75,8 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             </div>
+                            <form action="{% url 'bidbyuser' product.id %}" method="post">
+                                {% csrf_token %}
                             <div class="modal-body d-flex justify-content-center">
                                 <div class="card" style="width: 18rem;">
                                     <img class="card-img-top" src="{{product.productimages_set.first.images.url}}" alt="Card image cap">
@@ -96,6 +98,7 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Send Request</button>
                             </div>
+                            </form>
                         </div>
                         </div>
                     </div>

@@ -35,3 +35,6 @@ const productLocaError = document.getElementById('productLocaError');
 const membershipRadios1 = document.getElementById('membershipRadios1');
 const membershipRadios2 = document.getElementById('membershipRadios2');
 const biddingdiv = document.getElementById('biddingdiv');
+const biddingdiv1 = document.getElementById('biddingdiv1');
+const strategys_sel = document.getElementById('strategys');
+const errorStrategy = document.getElementById('errorStrategy');

@@ -23,6 +23,7 @@ def adminView(request):
         "testerserv": TesterServices.objects.all().count(),
         "deliverycount": UserAuth.objects.filter(UserRole=4).count(),
         "deliveryserv": DeliveryChart.objects.all().count(),
+        "products": Product.objects.all().count(),
     }
     if not request.user.is_authenticated:
         return redirect('login')

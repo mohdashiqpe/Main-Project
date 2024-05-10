@@ -146,12 +146,21 @@ def checkProductStatus():
 
 def auto_Update_Bid(product_id):
     product = Product.objects.get(id=product_id)
-    if product.biddingprice_set.all().count() > 1:
+    if product.biddingprice_set.all().count() >= 1:
         highest_bidder = BiddingPrice.objects.filter(product_id=product.id).order_by('-bidding_price').first()
         if product.baseprice < highest_bidder.bidding_price:
             print(f'Product with ID: {product_id} and Name: {product.name} has been Completed Bidding with Highest Bidder {highest_bidder.userauth.username}')
+            bid_instance = BiddingPrice.objects.get(id=highest_bidder.id)
+            bid_instance.is_final = True
+            bid_instance.save()
         else:
             print(f'Product Has no Better Bidding')
+            if product.auto_sell_type == 1:
+                highest_bidder.is_final = True
+                highest_bidder.save()
+            elif product.auto_sell_type == 2:
+                product.is_active = False
+                product.save()
     else:
         print(f'No Bidding Available For {product.name}')
 
